@@ -89,5 +89,6 @@
         },
         "asar": false
     },
-    "repository": "https://github.com/Ding-Ding-Projects/quicktype"
+    "repository": "https://github.com/Ding-Ding-Projects/quicktype",
+    "author": "Ding Ding Projects"
 }
