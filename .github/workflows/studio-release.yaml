@@ -132,9 +132,15 @@ jobs:
         runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
+            # Only the release files; the build record from the container job is not one of them.
             - uses: actions/download-artifact@v4
               with:
-                  path: out
+                  name: windows
+                  path: out/windows
+            - uses: actions/download-artifact@v4
+              with:
+                  name: appliance
+                  path: out/appliance
             - name: Write release notes
               run: |
                   completed="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
