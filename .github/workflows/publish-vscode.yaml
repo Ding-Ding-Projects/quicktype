@@ -12,10 +12,9 @@ jobs:
         # The Marketplace does not accept SemVer prerelease suffixes. npm
         # prereleases still publish from -preN tags; the extension waits for
         # the corresponding stable release.
-        if: ${{ !contains(github.event.release.tag_name, '-pre') }}
+        # quicktype Studio releases (tags starting with studio-) are not Marketplace releases.
+        if: ${{ !contains(github.event.release.tag_name, '-pre') && !startsWith(github.event.release.tag_name, 'studio-') }}
         runs-on: ubuntu-22.04
-        # quicktype Studio releases (tags starting with studio-) are not npm or Marketplace releases.
-        if: ${{ !startsWith(github.event.release.tag_name, 'studio-') }}
         permissions:
             contents: read
         steps:
