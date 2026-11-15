@@ -13,8 +13,17 @@ export function setSchoolModeForText(on: boolean) {
     schoolModeOn = on;
 }
 
+let languageOverride: "en" | "yue" | "both" | null = null;
+
+/** A scheduled language that applies for part of the day. Returns true when it changed. */
+export function setLanguageOverride(v: "en" | "yue" | "both" | null) {
+    const changed = v !== languageOverride;
+    languageOverride = v;
+    return changed;
+}
+
 export function effectiveLanguage(): "en" | "yue" | "both" {
-    return schoolModeOn ? "en" : settings.get().language;
+    return schoolModeOn ? "en" : (languageOverride ?? settings.get().language);
 }
 
 function fill(template: string, params?: Record<string, string | number>) {

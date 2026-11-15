@@ -4,6 +4,23 @@ export type LanguageMode = "en" | "yue" | "both";
 export type Dock = "left" | "right" | "top" | "bottom";
 export type Theme = "light" | "dark" | "system" | "contrast";
 
+export interface TabGroup {
+    id: string;
+    name: string;
+    color: string;
+    collapsed: boolean;
+    tabs: string[];
+}
+
+export interface Schedule {
+    id: string;
+    from: string;
+    to: string;
+    key: "theme" | "language" | "density";
+    value: string;
+    enabled: boolean;
+}
+
 export interface Settings {
     v: 1;
     language: LanguageMode;
@@ -37,6 +54,10 @@ export interface Settings {
     dimSum: boolean;
     elementStyles: Record<string, Record<string, string>>;
     updates: { auto: boolean };
+    tabGroups: TabGroup[];
+    stripCollapsed: boolean;
+    schedules: Schedule[];
+    focusMinutes: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -45,8 +66,8 @@ export const DEFAULT_SETTINGS: Settings = {
     funEn: 5,
     funYue: 5,
     emojiInDialogs: true,
-    theme: "system",
-    accent: "#4B2FE0",
+    theme: "dark",
+    accent: "#c6f432",
     density: "comfortable",
     textScale: 1,
     reducedMotion: "system",
@@ -79,6 +100,10 @@ export const DEFAULT_SETTINGS: Settings = {
     dimSum: true,
     elementStyles: {},
     updates: { auto: true },
+    tabGroups: [],
+    stripCollapsed: false,
+    schedules: [],
+    focusMinutes: 25,
 };
 
 const KEY = "studio.settings.v1";
@@ -132,6 +157,9 @@ class SettingsStore {
             ...DEFAULT_SETTINGS.narrator,
             ...this.value.narrator,
         };
+        // The first release shipped a violet default accent; untouched defaults move to the new one.
+        if (this.value.accent.toLowerCase() === "#4b2fe0")
+            this.value.accent = DEFAULT_SETTINGS.accent;
     }
 
     get(): Settings {

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Direction A, Midnight forge</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#C6F432}a:hover{color:#E3FF8A}
+button{font:inherit;cursor:pointer}
+.k{color:#C792EA}.t{color:#C6F432}.s{color:#F5B97A}.p{color:#E9E6F2}.c{color:#6E6A80}.n{color:#7FD4FF}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; position: relative; overflow: hidden; background: #0B0B10; color: #E9E6F2; font-family: 'Geist', 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+<div aria-hidden="true" style="position: absolute; left: 380px; top: -320px; width: 900px; height: 620px; border-radius: 50%; background: radial-gradient(closest-side, rgba(110,84,255,.28), rgba(110,84,255,0))"></div>
+<div aria-hidden="true" style="position: absolute; right: -200px; bottom: -260px; width: 700px; height: 520px; border-radius: 50%; background: radial-gradient(closest-side, rgba(198,244,50,.12), rgba(198,244,50,0))"></div>
+
+<header style="position: absolute; left: 0; right: 0; top: 0; height: 48px; display: flex; align-items: center; gap: 14px; padding: 0 14px 0 18px">
+<svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="quicktype Studio"><path d="M7 4C4 4 4 6 4 8s-1 3-2 4c1 1 2 2 2 4s0 4 3 4" fill="none" stroke="#C6F432" stroke-width="2.2" stroke-linecap="round"></path><path d="M11 7h10M16 7v13" fill="none" stroke="#E9E6F2" stroke-width="2.2" stroke-linecap="round"></path></svg>
+<nav aria-label="Path" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #9A96AB">
+<span>Workspace</span><span aria-hidden="true">/</span><span style="color: #E9E6F2">pokedex.json</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; background: rgba(198,244,50,.12); color: #C6F432; font-family: 'Geist Mono', monospace; font-size: 12px">3 types inferred</span>
+</nav>
+<span style="flex: 1"></span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6E6A80">local · offline · 38 ms</span>
+<button aria-label="Minimize" style="width: 36px; height: 32px; border: 0; background: transparent; color: #9A96AB">–</button>
+<button aria-label="Close" style="width: 36px; height: 32px; border: 0; background: transparent; color: #9A96AB">×</button>
+</header>
+
+<nav aria-label="Tabs" style="position: absolute; left: 14px; top: 64px; bottom: 96px; width: 52px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07)">
+<sc-for list="{{rail}}" as="r" hint-placeholder-count="7">
+<button aria-label="{{r.label}}" style="{{r.style}}"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"></path></svg></button>
+</sc-for>
+</nav>
+
+<section aria-label="Editor" style="position: absolute; left: 82px; top: 64px; right: 346px; bottom: 96px; border-radius: 20px; background: rgba(20,20,28,.78); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), 0 30px 80px rgba(0,0,0,.45); overflow: hidden; display: grid; grid-template-columns: 1fr 1.25fr">
+<div style="display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,.06)">
+<div style="height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 13px; color: #9A96AB">
+<span style="color: #E9E6F2; font-weight: 600">Source</span>
+<span style="height: 22px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 6px; background: rgba(255,255,255,.06); font-family: 'Geist Mono', monospace; font-size: 12px">JSON</span>
+<span style="flex: 1"></span><span style="font-family: 'Geist Mono', monospace; font-size: 12px">Pokedex</span>
+</div>
+<pre style="flex: 1; margin: 0; padding: 14px 16px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px; line-height: 1.75; white-space: pre"><span class="c"> 1</span>  <span class="p">{</span>
+<span class="c"> 2</span>    <span class="s">"pokemon"</span><span class="p">: [{</span>
+<span class="c"> 3</span>      <span class="s">"id"</span><span class="p">: </span><span class="n">1</span><span class="p">,</span>
+<span class="c"> 4</span>      <span class="s">"name"</span><span class="p">: </span><span class="s">"Bulbasaur"</span><span class="p">,</span>
+<span class="c"> 5</span>      <span class="s">"type"</span><span class="p">: [</span><span class="s">"Grass"</span><span class="p">, </span><span class="s">"Poison"</span><span class="p">],</span>
+<span class="c"> 6</span>      <span class="s">"spawn_chance"</span><span class="p">: </span><span class="n">0.69</span><span class="p">,</span>
+<span class="c"> 7</span>      <span class="s">"next_evolution"</span><span class="p">: [{</span>
+<span class="c"> 8</span>        <span class="s">"num"</span><span class="p">: </span><span class="s">"002"</span><span class="p">,</span>
+<span class="c"> 9</span>        <span class="s">"name"</span><span class="p">: </span><span class="s">"Ivysaur"</span>
+<span class="c">10</span>      <span class="p">}]</span>
+<span class="c">11</span>    <span class="p">}]</span>
+<span class="c">12</span>  <span class="p">}</span></pre>
+</div>
+<div style="display: flex; flex-direction: column; background: rgba(0,0,0,.18)">
+<div role="tablist" aria-label="Output language" style="height: 42px; display: flex; align-items: flex-end; gap: 2px; padding: 0 10px; border-bottom: 1px solid rgba(255,255,255,.06)">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="5">
+<button role="tab" aria-selected="{{l.on}}" onClick="{{l.pick}}" style="{{l.style}}"><span style="{{l.dot}}"></span>{{l.label}}</button>
+</sc-for>
+<span style="flex: 1"></span>
+<button style="height: 28px; margin-bottom: 7px; padding: 0 10px; border-radius: 8px; border: 0; background: #C6F432; color: #0B0B10; font-weight: 600; font-size: 13px">Copy</button>
+</div>
+<pre style="flex: 1; margin: 0; padding: 14px 18px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px; line-height: 1.75; white-space: pre"><span class="k">export interface</span> <span class="t">Pokedex</span> <span class="p">{</span>
+    <span class="p">pokemon</span><span class="c">:</span> <span class="t">Pokemon</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="k">export interface</span> <span class="t">Pokemon</span> <span class="p">{</span>
+    <span class="p">id</span><span class="c">:</span>             <span class="n">number</span><span class="p">;</span>
+    <span class="p">name</span><span class="c">:</span>           <span class="n">string</span><span class="p">;</span>
+    <span class="p">type</span><span class="c">:</span>           <span class="t">Type</span><span class="p">[];</span>
+    <span class="p">spawn_chance</span><span class="c">:</span>   <span class="n">number</span><span class="p">;</span>
+    <span class="p">next_evolution</span><span class="c">:</span> <span class="t">Evolution</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="k">export enum</span> <span class="t">Type</span> <span class="p">{</span>
+    <span class="p">Grass</span> = <span class="s">"Grass"</span><span class="p">,</span>
+    <span class="p">Poison</span> = <span class="s">"Poison"</span><span class="p">,</span>
+<span class="p">}</span></pre>
+</div>
+</section>
+
+<aside aria-label="Inspector" style="position: absolute; top: 64px; right: 14px; bottom: 96px; width: 318px; display: flex; flex-direction: column; gap: 10px">
+<section style="padding: 14px; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07)">
+<h2 style="margin: 0 0 10px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #9A96AB">Inferred types</h2>
+<sc-for list="{{types}}" as="ty" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: 10px; margin-bottom: 4px; background: rgba(255,255,255,.03)">
+<span style="{{ty.badge}}">{{ty.kind}}</span>
+<span style="flex: 1; font-family: 'Geist Mono', monospace; font-size: 13px">{{ty.name}}</span>
+<span style="font-size: 12px; color: #6E6A80">{{ty.fields}}</span>
+</div>
+</sc-for>
+</section>
+<section style="flex: 1; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #9A96AB">TypeScript options</h2>
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+<button onClick="{{o.toggle}}" aria-pressed="{{o.on}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; border-radius: 10px; border: 0; background: transparent; color: #E9E6F2; text-align: left">
+<span style="flex: 1">{{o.label}}</span>
+<span style="{{o.track}}"><span style="{{o.knob}}"></span></span>
+</button>
+</sc-for>
+</section>
+</aside>
+
+<div role="search" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: 720px; height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 8px 0 18px; border-radius: 16px; background: rgba(28,28,38,.92); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 20px 60px rgba(0,0,0,.6)">
+<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#9A96AB" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<span style="flex: 1; color: #6E6A80">Jump to a command, setting or language</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #9A96AB">.*</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 7px; background: rgba(255,255,255,.08); font-family: 'Geist Mono', monospace; font-size: 12px; color: #C9C5D6">Ctrl Shift F</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { lang: 'TypeScript', opts: { a: true, b: false, c: true, d: true } }; }
+  renderVals() {
+    const R = [['Generate', 'M4 6h16M4 12h10M4 18h7M17 15l3 3-3 3'], ['Samples', 'M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v6H4zM13 14h7v6h-7z'], ['History', 'M3 12a9 9 0 1 0 3-6.7M3 4v4h4M12 7v5l3 2'], ['Tools', 'M14 6l4 4-9 9H5v-4zM12 8l4 4'], ['Extensions', 'M10 4h4v3a2 2 0 1 0 4 0V4h2v6h-3a2 2 0 1 0 0 4h3v6H4V4h6z'], ['Docs', 'M5 4h10l4 4v12H5zM14 4v5h5'], ['Settings', 'M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 12h2M18 12h2M12 4v2M12 18v2']];
+    const rail = R.map(([label, icon], i) => ({ label, icon, style: 'width: 40px; height: 40px; border-radius: 12px; border: 0; display: grid; place-items: center; ' + (i === 0 ? 'background: rgba(198,244,50,.14); color: #C6F432' : 'background: transparent; color: #9A96AB') }));
+    const C = { TypeScript: '#3178C6', Swift: '#F05138', Kotlin: '#A97BFF', Rust: '#DEA584', Go: '#00ADD8' };
+    const langs = Object.keys(C).map((label) => { const on = this.state.lang === label; return { label, on: String(on), pick: () => this.setState({ lang: label }),
+      dot: 'width: 7px; height: 7px; border-radius: 2px; background: ' + C[label],
+      style: 'height: 34px; display: inline-flex; align-items: center; gap: 8px; padding: 0 12px; border: 0; border-radius: 9px 9px 0 0; font-size: 13px; ' + (on ? 'background: rgba(255,255,255,.07); color: #E9E6F2; box-shadow: inset 0 -2px 0 #C6F432' : 'background: transparent; color: #9A96AB') }; });
+    const types = [['iface', 'Pokemon', '5 fields', '#7FD4FF'], ['iface', 'Evolution', '2 fields', '#7FD4FF'], ['enum', 'Type', '2 cases', '#F5B97A']].map(([kind, name, fields, col]) => ({ kind, name, fields, badge: 'width: 42px; text-align: center; font-family: Geist Mono, monospace; font-size: 11px; padding: 2px 0; border-radius: 5px; color: ' + col + '; background: rgba(255,255,255,.06)' }));
+    const O = [['a', 'Detect enums'], ['b', 'Types only'], ['c', 'Check at runtime'], ['d', 'Prefer unions']];
+    const opts = O.map(([k, label]) => { const on = this.state.opts[k]; return { label, on: String(on), toggle: () => this.setState({ opts: { ...this.state.opts, [k]: !on } }),
+      track: 'width: 34px; height: 20px; border-radius: 6px; position: relative; ' + (on ? 'background: #C6F432' : 'background: rgba(255,255,255,.12)'),
+      knob: 'position: absolute; top: 3px; width: 14px; height: 14px; border-radius: 4px; ' + (on ? 'left: 17px; background: #0B0B10' : 'left: 3px; background: #9A96AB') }; });
+    return { rail, langs, types, opts };
+  }
+}
+</script>
+</body>
+</html>

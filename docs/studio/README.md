@@ -7,6 +7,7 @@ Every feature has its own article. Each covers what it does, how to use it, what
 - [Generating code](generating/generate.md)
 - [Language options](generating/language-options.md)
 - [Samples](generating/samples.md)
+- [JSON editor](generating/json-editor.md)
 
 ## Language and wording
 
@@ -47,6 +48,7 @@ Every feature has its own article. Each covers what it does, how to use it, what
 
 ## Running it yourself
 
+- [In your browser](running/in-your-browser.md)
 - [Desktop app](running/desktop-app.md)
 - [Self-hosted container](running/self-hosted.md)
 - [Appliance image](running/appliance.md)

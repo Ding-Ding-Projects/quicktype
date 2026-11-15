@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JSON editor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#C6F432}a:hover{color:#E3FF8A}
+button{font:inherit;cursor:pointer}
+input{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; position: relative; overflow: hidden; background: #0B0B10; color: #E9E6F2; font-family: 'Geist', 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+<div aria-hidden="true" style="position: absolute; left: 380px; top: -320px; width: 900px; height: 620px; border-radius: 50%; background: radial-gradient(closest-side, rgba(110,84,255,.26), rgba(110,84,255,0))"></div>
+
+<header style="position: absolute; left: 0; right: 0; top: 0; height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 18px">
+<svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="quicktype Studio"><path d="M7 4C4 4 4 6 4 8s-1 3-2 4c1 1 2 2 2 4s0 4 3 4" fill="none" stroke="#C6F432" stroke-width="2.2" stroke-linecap="round"></path><path d="M11 7h10M16 7v13" fill="none" stroke="#E9E6F2" stroke-width="2.2" stroke-linecap="round"></path></svg>
+<span style="color: #9A96AB">Workspace</span><span aria-hidden="true" style="color: #6E6A80">/</span><span>JSON editor</span>
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: rgba(198,244,50,.12); color: #C6F432; font-family: 'Geist Mono', monospace; font-size: 12px">valid · 23 nodes</span>
+</header>
+
+<nav aria-label="Tabs" style="position: absolute; left: 14px; top: 64px; bottom: 96px; width: 52px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07)">
+<button aria-label="Generate" style="width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; color: #9A96AB">≡</button>
+<button aria-label="JSON editor" style="width: 40px; height: 40px; border-radius: 12px; border: 0; background: rgba(198,244,50,.14); color: #C6F432; font-family: 'Geist Mono', monospace">{ }</button>
+<button aria-label="Settings" style="width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; color: #9A96AB">⚙</button>
+</nav>
+
+<section aria-label="Tree" style="position: absolute; left: 82px; top: 64px; right: 380px; bottom: 96px; border-radius: 20px; background: rgba(20,20,28,.78); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), 0 30px 80px rgba(0,0,0,.45); overflow: hidden; display: flex; flex-direction: column">
+<div style="height: 48px; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-bottom: 1px solid rgba(255,255,255,.06)">
+<div role="tablist" aria-label="View" style="display: flex; padding: 3px; gap: 2px; border-radius: 10px; background: rgba(255,255,255,.04)">
+<sc-for list="{{views}}" as="v" hint-placeholder-count="3">
+<button role="tab" aria-selected="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+</sc-for>
+</div>
+<span style="width: 1px; height: 22px; background: rgba(255,255,255,.08); margin: 0 4px"></span>
+<button aria-label="Undo" style="height: 32px; padding: 0 10px; border-radius: 8px; border: 0; background: transparent; color: #C9C5D6">Undo</button>
+<button aria-label="Redo" style="height: 32px; padding: 0 10px; border-radius: 8px; border: 0; background: transparent; color: #6E6A80">Redo</button>
+<button style="height: 32px; padding: 0 10px; border-radius: 8px; border: 0; background: transparent; color: #C9C5D6">Expand all</button>
+<button style="height: 32px; padding: 0 10px; border-radius: 8px; border: 0; background: transparent; color: #C9C5D6">Sort keys</button>
+<span style="flex: 1"></span>
+<label style="width: 260px; height: 32px; display: flex; align-items: center; gap: 8px; padding: 0 4px 0 10px; border-radius: 9px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); color: #6E6A80">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Find keys and values</span>
+<input placeholder="Find keys and values" style="flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #E9E6F2">
+<span style="height: 24px; display: inline-grid; place-items: center; padding: 0 7px; border-radius: 6px; background: rgba(255,255,255,.07); font-family: 'Geist Mono', monospace; font-size: 12px; color: #9A96AB">.*</span>
+</label>
+</div>
+<div role="tree" aria-label="JSON document" style="flex: 1; overflow: hidden; padding: 8px 6px; font-family: 'Geist Mono', monospace; font-size: 13px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+<div role="treeitem" aria-selected="{{r.sel}}" onClick="{{r.pick}}" style="{{r.style}}">
+<span style="{{r.indent}}"></span>
+<span style="width: 14px; color: #6E6A80">{{r.caret}}</span>
+<span style="color: #E9E6F2">{{r.key}}</span>
+<span style="color: #6E6A80">{{r.colon}}</span>
+<span style="{{r.valStyle}}">{{r.val}}</span>
+<span style="flex: 1"></span>
+<span style="{{r.badge}}">{{r.type}}</span>
+</div>
+</sc-for>
+</div>
+<div style="height: 40px; display: flex; align-items: center; gap: 12px; padding: 0 14px; border-top: 1px solid rgba(255,255,255,.06); font-size: 12px; color: #9A96AB">
+<span style="color: #9BE38A">● Valid JSON</span><span>23 nodes</span><span>612 bytes</span><span>depth 4</span>
+<span style="flex: 1"></span><span style="font-family: 'Geist Mono', monospace">$.pokemon[0].type[1]</span>
+</div>
+</section>
+
+<aside aria-label="Selected node" style="position: absolute; top: 64px; right: 14px; bottom: 96px; width: 352px; display: flex; flex-direction: column; gap: 10px">
+<section style="padding: 14px; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #9A96AB">Selected</h2>
+<div style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #C6F432">$.pokemon[0].type[1]</div>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #9A96AB">Value
+<input value="Poison" style="height: 36px; padding: 0 10px; border-radius: 9px; border: 0; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px #C6F432; color: #E9E6F2; font-family: 'Geist Mono', monospace"></label>
+<div role="radiogroup" aria-label="Type" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+<button role="radio" aria-checked="{{t.on}}" style="{{t.style}}">{{t.label}}</button>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Add sibling</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Duplicate</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Move up</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Move down</button>
+<button style="grid-column: 1 / -1; height: 34px; border-radius: 9px; border: 0; background: rgba(255,138,122,.12); color: #FF8A7A">Delete</button>
+</div>
+</section>
+<section style="flex: 1; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #9A96AB">Document</h2>
+<button style="height: 40px; border-radius: 10px; border: 0; background: #C6F432; color: #0B0B10; font-weight: 600">Generate types from this</button>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Open file</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Save as</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Format</button>
+<button style="height: 34px; border-radius: 9px; border: 0; background: rgba(255,255,255,.07); color: #E9E6F2">Minify</button>
+</div>
+<p style="margin: 0; font-size: 12px; color: #6E6A80; line-height: 1.5">Every edit is checked as you go and can be undone. Nothing is sent anywhere.</p>
+</section>
+</aside>
+
+<div role="search" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: 720px; height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 8px 0 18px; border-radius: 16px; background: rgba(28,28,38,.92); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 20px 60px rgba(0,0,0,.6)">
+<span style="flex: 1; color: #6E6A80">Jump to a command, setting or language</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 7px; background: rgba(255,255,255,.08); font-family: 'Geist Mono', monospace; font-size: 12px; color: #C9C5D6">Ctrl Shift F</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { view: 'Tree', sel: 6 }; }
+  renderVals() {
+    const views = ['Tree', 'Code', 'Split'].map((label) => { const on = this.state.view === label; return { label, on: String(on), pick: () => this.setState({ view: label }),
+      style: 'height: 28px; padding: 0 12px; border-radius: 8px; border: 0; ' + (on ? 'background: rgba(255,255,255,.1); color: #E9E6F2; font-weight: 600' : 'background: transparent; color: #9A96AB') }; });
+    const C = { object: '#7FD4FF', array: '#C792EA', string: '#F5B97A', number: '#7FD4FF', boolean: '#C6F432', null: '#9A96AB' };
+    const R = [
+      [0, '▾', 'root', '', '{ 1 key }', 'object'], [1, '▾', 'pokemon', ':', '[ 1 item ]', 'array'], [2, '▾', '0', ':', '{ 7 keys }', 'object'],
+      [3, '', 'id', ':', '1', 'number'], [3, '', 'name', ':', '"Bulbasaur"', 'string'], [3, '▾', 'type', ':', '[ 2 items ]', 'array'],
+      [4, '', '1', ':', '"Poison"', 'string'], [4, '', '0', ':', '"Grass"', 'string'], [3, '', 'height', ':', '"0.71 m"', 'string'], [3, '', 'spawn_chance', ':', '0.69', 'number'],
+      [3, '', 'legendary', ':', 'false', 'boolean'], [3, '', 'egg_group', ':', 'null', 'null'], [3, '▸', 'next_evolution', ':', '[ 1 item ]', 'array'],
+    ];
+    const rows = R.map(([d, caret, key, colon, val, type], i) => { const sel = this.state.sel === i; return { caret, key, colon, val, type, sel: String(sel), pick: () => this.setState({ sel: i }),
+      indent: 'width: ' + (d * 18) + 'px; flex: 0 0 auto',
+      style: 'height: 32px; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-radius: 8px; cursor: pointer; ' + (sel ? 'background: rgba(198,244,50,.1); box-shadow: inset 2px 0 0 #C6F432' : ''),
+      valStyle: 'color: ' + (type === 'string' ? '#F5B97A' : type === 'object' || type === 'array' ? '#6E6A80' : C[type]),
+      badge: 'font-size: 11px; padding: 1px 6px; border-radius: 5px; background: rgba(255,255,255,.06); color: ' + C[type] }; });
+    const types = ['object', 'array', 'string', 'number', 'boolean', 'null'].map((label) => ({ label, on: String(label === 'string'),
+      style: 'height: 30px; border-radius: 8px; border: 0; font-size: 12px; ' + (label === 'string' ? 'background: rgba(245,185,122,.16); color: #F5B97A' : 'background: rgba(255,255,255,.05); color: #9A96AB') }));
+    return { views, rows, types };
+  }
+}
+</script>
+</body>
+</html>

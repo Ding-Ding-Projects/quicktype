@@ -8,7 +8,14 @@
 - New workflows `studio-release.yaml` and `studio-site.yaml`; the npm and Marketplace workflows now skip `studio-` tags.
 - New root `build.bat`, `build-installer.bat`, `download-dependencies.bat`, `download-dependencies.sh`, `dependencies.manifest.json` and `ROADMAP.md`.
 
-## Verified in this pass
+## Second pass: Midnight forge, JSON editor and the in-browser tool
+
+- Interface rebuilt in the chosen Midnight forge direction; new JSON editor page; tab groups, appearance, colour and logo editors, scheduled settings.
+- The website now builds the interface as an in-browser edition into `site/dist/app/` and shows it on `app.html`. The Pages workflow builds the engine and installs `studio/` dependencies first.
+- Verified locally: type check clean, 34 unit tests pass (including the JSON document model and colour conversion), every tab captured in headless Chrome with no page errors, and the in-browser build generates TypeScript from the Pokédex sample and opens the JSON editor with no page errors.
+- Not yet verified: the desktop app has not been recaptured since the redesign; the in-browser page has not been checked on the published site until the Pages run finishes.
+
+## Verified in the first pass
 
 - `studio`: type check clean, production build succeeds, 22 unit tests pass (`npm test`).
 - Web edition in headless Chrome: first-run setup, every tab, palette, dark bilingual mode and a phone width, with no page errors.

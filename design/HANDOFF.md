@@ -11,14 +11,19 @@ The redesign was drawn on a design canvas and copied here so the repository hold
 | Settings and wording features | `Settings.dc.html` |
 | Self-hosted web edition | `WebApp.dc.html`, `WebPhone.dc.html` |
 | Appliance edition | `Appliance.dc.html` |
-| Website (not the app) | `Landing.dc.html` |
+| Website | `Landing.dc.html` |
+| Second round: three directions | `DirA.dc.html` (Midnight forge, chosen), `DirB.dc.html`, `DirC.dc.html` |
+| JSON editor | `JsonEditor.dc.html` |
 
 ## Design system
 
-- Type: Bricolage Grotesque for headings, Atkinson Hyperlegible Next for text, JetBrains Mono for code.
-- Colour: paper `#F7F3EC`, ink `#1C1B1F`, violet primary `#4B2FE0`, apricot accent `#FFB38A`, teal and warm containers for secondary surfaces, a near-black code pane.
-- Shape: 28 px cards, pill buttons and chips, 44 px minimum targets.
-- Layout: tabs docked on the left; Generate is source, code and options side by side, collapsing to one column on narrow windows.
+The second round replaced the first look with direction A, Midnight forge. The first-round boards stay as a record.
+
+- Type: Geist for text and headings, Geist Mono for code and numbers.
+- Colour: near-black `#0B0B10` with a violet glow, glass panels with hairline edges, lime primary `#C6F432`, coloured dots per target language, syntax colours in the code panes. Light and high-contrast themes keep the same structure, with a violet primary in light.
+- Shape: 18 px panels, 11 px controls, 44 px minimum targets.
+- Layout: tabs docked on the left; Generate is a source and output editor pair beside an inspector (inferred types, inference switches, language options); a floating command bar at the bottom opens the palette.
+- JSON editor: Tree, Code, Split and Table views share one document, with an inspector for the selected node, validation, document stats and a clickable history.
 
 ## Status
 

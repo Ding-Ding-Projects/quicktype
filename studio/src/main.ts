@@ -1,10 +1,10 @@
-import "@fontsource/atkinson-hyperlegible-next/400.css";
-import "@fontsource/atkinson-hyperlegible-next/700.css";
-import "@fontsource-variable/bricolage-grotesque";
-import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
 import "./styles/app.css";
+import "./styles/json-editor.css";
 
 import "./pages/generate";
+import "./pages/jsonEditor";
 import "./pages/simplePages";
 import "./pages/tools";
 import "./pages/extensions";
@@ -12,8 +12,14 @@ import "./pages/docs";
 import "./pages/settings";
 
 import { h, icon, logoMark, prefersReducedMotion, clear } from "./lib/dom";
-import { htmlLang, label, setSchoolModeForText, t } from "./lib/i18n";
-import { settings } from "./lib/store";
+import {
+    htmlLang,
+    label,
+    setLanguageOverride,
+    setSchoolModeForText,
+    t,
+} from "./lib/i18n";
+import { DEFAULT_SETTINGS, settings, type Settings } from "./lib/store";
 import { loadCache, onWording } from "./lib/wording";
 import * as school from "./lib/school";
 import { BUILD, DESKTOP_DOWNLOAD_URL, edition, host } from "./lib/platform";
@@ -24,7 +30,7 @@ import {
     reconcileTabs,
     renderTabStrip,
 } from "./ui/tabs";
-import { openPalette, paletteButton, addPaletteSource } from "./ui/palette";
+import { openPalette, addPaletteSource } from "./ui/palette";
 import { installGlobalContextMenu } from "./ui/contextMenu";
 import {
     allNotes,
@@ -43,13 +49,40 @@ import {
     restartWizard,
 } from "./ui/wizard";
 import { initUpdates, checkForUpdates } from "./ui/updates";
-import { generateActions } from "./pages/generate";
+import { generateActions, generationSummary } from "./pages/generate";
 import { onHistory } from "./lib/history";
 
 const app = document.getElementById("app") as HTMLElement;
 
-function applyTheme() {
+/** Settings with any active time-of-day schedule applied on top. */
+function effective(): Settings {
     const s = settings.get();
+    const now = new Date();
+    const mins = now.getHours() * 60 + now.getMinutes();
+    const toMin = (v: string) => {
+        const [hh, mm] = v.split(":").map(Number);
+        return (hh || 0) * 60 + (mm || 0);
+    };
+    const out = { ...s };
+    for (const r of s.schedules) {
+        if (!r.enabled) continue;
+        const a = toMin(r.from);
+        const b = toMin(r.to);
+        const inside = a <= b ? mins >= a && mins < b : mins >= a || mins < b;
+        if (inside) (out as Record<string, unknown>)[r.key] = r.value;
+    }
+    return out;
+}
+
+function applyTheme() {
+    const s = effective();
+    if (
+        setLanguageOverride(
+            s.language !== settings.get().language ? s.language : null,
+        ) &&
+        app.childElementCount
+    )
+        queueMicrotask(render);
     const root = document.documentElement;
     const dark =
         s.theme === "dark" ||
@@ -62,7 +95,11 @@ function applyTheme() {
         ? "reduced"
         : "full";
     root.dataset.focus = s.adhd.focus ? "on" : "off";
-    root.style.setProperty("--primary", s.accent);
+    const accent =
+        s.accent === DEFAULT_SETTINGS.accent && root.dataset.theme === "light"
+            ? "#4b2fe0"
+            : s.accent;
+    root.style.setProperty("--primary", accent);
     root.style.setProperty("--text-scale", String(s.textScale));
     root.lang = htmlLang();
     document.title = s.displayName;
@@ -73,7 +110,7 @@ function notificationButton() {
     const btn = h(
         "button",
         {
-            class: "icon-btn round",
+            class: "icon-btn",
             "aria-label": `${t("notify.center")}${n ? `, ${n}` : ""}`,
             "aria-haspopup": "dialog",
             onclick: () => {
@@ -87,7 +124,11 @@ function notificationButton() {
                     h(
                         "div",
                         { class: "row" },
-                        h("h2", { class: "grow" }, t("notify.center")),
+                        h(
+                            "h2",
+                            { class: "grow", style: "margin:0;font-size:1rem" },
+                            t("notify.center"),
+                        ),
                         h(
                             "button",
                             {
@@ -108,7 +149,7 @@ function notificationButton() {
                               ...allNotes().map((x) =>
                                   h(
                                       "li",
-                                      { class: `note-${x.tone}` },
+                                      null,
                                       h(
                                           "span",
                                           { style: "white-space: pre-line" },
@@ -116,7 +157,7 @@ function notificationButton() {
                                       ),
                                       h(
                                           "span",
-                                          { class: "muted small block" },
+                                          { class: "faint small block" },
                                           x.at.toLocaleTimeString(),
                                       ),
                                   ),
@@ -148,22 +189,73 @@ function notificationButton() {
                 panel.querySelector("button")?.focus();
             },
         },
-        icon("bell", 20),
+        icon("bell", 18),
         n ? h("span", { class: "badge", "aria-hidden": "true" }) : null,
     );
     return btn;
 }
 
+let timerEnd = 0;
+function focusTimer() {
+    const s = settings.get();
+    if (!s.adhd.timers) return null;
+    const el = h("button", {
+        class: "focus-timer",
+        type: "button",
+        "aria-live": "off",
+        title: "Focus timer: click to start or restart",
+    });
+    const tick = () => {
+        if (!timerEnd) {
+            el.textContent = `${s.focusMinutes}:00 focus`;
+            return;
+        }
+        const left = Math.max(0, timerEnd - Date.now());
+        el.textContent = `${Math.floor(left / 60000)}:${String(Math.floor((left % 60000) / 1000)).padStart(2, "0")}`;
+        if (left === 0) {
+            timerEnd = 0;
+            notify("info", "msg.converted", {
+                from: `${s.focusMinutes} minutes of focus`,
+                to: "a break",
+            });
+        }
+    };
+    el.addEventListener("click", () => {
+        timerEnd = Date.now() + s.focusMinutes * 60000;
+        tick();
+    });
+    tick();
+    const iv = setInterval(
+        () => (el.isConnected ? tick() : clearInterval(iv)),
+        1000,
+    );
+    return el;
+}
+
 function titleBar() {
     const s = settings.get();
+    const page = pageById(s.activeTab);
     return h(
         "header",
         { class: "titlebar" },
         h(
             "div",
             { class: "brand" },
-            logoMark(s.logo.preset, s.logo.custom, 28),
+            logoMark(s.logo.preset, s.logo.custom, 24),
             h("span", { class: "brand-name" }, s.displayName),
+        ),
+        h(
+            "nav",
+            { class: "crumbs", "aria-label": "Location" },
+            h("span", { "aria-hidden": "true" }, "/"),
+            h("span", { class: "here" }, page ? t(page.labelKey) : ""),
+            s.activeTab === "generate"
+                ? h(
+                      "span",
+                      { class: "chiplet accent crumb-status" },
+                      generationSummary(),
+                  )
+                : null,
             edition() !== "desktop"
                 ? h("span", { class: "pill teal" }, t(`edition.${edition()}`))
                 : null,
@@ -171,10 +263,15 @@ function titleBar() {
                 ? h("span", { class: "pill" }, school.current().name)
                 : null,
         ),
-        paletteButton(),
         h(
             "div",
             { class: "title-actions" },
+            focusTimer(),
+            h(
+                "span",
+                { class: "chiplet", title: "Everything runs on this device" },
+                "local · offline",
+            ),
             notificationButton(),
             host
                 ? [
@@ -208,6 +305,23 @@ function titleBar() {
                   ]
                 : null,
         ),
+    );
+}
+
+function commandBar() {
+    return h(
+        "button",
+        {
+            class: "cmdbar",
+            type: "button",
+            onclick: openPalette,
+            "aria-keyshortcuts": "Control+Shift+F",
+            "aria-label": t("palette.label"),
+        },
+        icon("search", 16),
+        h("span", { class: "grow" }, t("app.searchHint")),
+        h("span", { class: "cmdbar-meta" }, ".*"),
+        h("kbd", null, "Ctrl Shift F"),
     );
 }
 
@@ -248,12 +362,12 @@ function render() {
             ? h(
                   "div",
                   { class: "desktop-banner", role: "note" },
-                  icon("download", 20),
+                  icon("download", 18),
                   h("span", { class: "grow" }, t("desktop.banner")),
                   h(
                       "a",
                       {
-                          class: "btn warm",
+                          class: "btn small warm",
                           href: DESKTOP_DOWNLOAD_URL,
                           target: "_blank",
                           rel: "noreferrer",
@@ -262,27 +376,6 @@ function render() {
                   ),
               )
             : null;
-    const footer = h(
-        "footer",
-        { class: "statusbar" },
-        h("span", null, t("app.offline")),
-        h("span", { class: "grow" }),
-        h(
-            "span",
-            null,
-            t("app.version", {
-                version: BUILD.version,
-                codeName: BUILD.codeName || "—",
-            }),
-        ),
-        h(
-            "span",
-            { class: "muted" },
-            t("about.updated", {
-                date: new Date(BUILD.builtAt).toLocaleDateString(),
-            }),
-        ),
-    );
     app.append(
         titleBar(),
         banner ?? "",
@@ -290,8 +383,9 @@ function render() {
             "div",
             { class: `body dock-${s.dock}` },
             renderTabStrip(),
-            h("div", { class: "content-wrap" }, content, footer),
+            h("div", { class: "content-wrap" }, content),
         ),
+        commandBar(),
     );
     applyElementStyles();
     if (focusedId) document.getElementById(focusedId)?.focus();
@@ -300,21 +394,35 @@ function render() {
 function installKeys() {
     document.addEventListener("keydown", (e) => {
         const mod = e.ctrlKey || e.metaKey;
-        if (mod && e.shiftKey && e.key.toLowerCase() === "f") {
+        const k = e.key.toLowerCase();
+        if (mod && e.shiftKey && k === "f") {
             e.preventDefault();
             openPalette();
-        } else if (mod && !e.shiftKey && e.key.toLowerCase() === "t") {
+        } else if (mod && !e.shiftKey && k === "t") {
             e.preventDefault();
             openCatalog();
-        } else if (mod && !e.shiftKey && e.key.toLowerCase() === "w") {
+        } else if (mod && !e.shiftKey && k === "w") {
             e.preventDefault();
             closeTab(settings.get().activeTab);
-        } else if (mod && e.shiftKey && e.key.toLowerCase() === "c") {
+        } else if (
+            mod &&
+            e.shiftKey &&
+            k === "c" &&
+            settings.get().activeTab === "generate"
+        ) {
             e.preventDefault();
             void generateActions.copyCode();
-        } else if (mod && !e.shiftKey && e.key.toLowerCase() === "s") {
+        } else if (
+            mod &&
+            !e.shiftKey &&
+            k === "s" &&
+            settings.get().activeTab === "generate"
+        ) {
             e.preventDefault();
             void generateActions.saveCode();
+        } else if (mod && k === "b") {
+            e.preventDefault();
+            settings.set({ stripCollapsed: !settings.get().stripCollapsed });
         }
     });
 }
@@ -329,7 +437,11 @@ function installDrop() {
     window.addEventListener("dragenter", (e) => {
         if (!e.dataTransfer?.types.includes("Files")) return;
         depth++;
-        if (edition() === "desktop" && !school.current().on)
+        if (
+            edition() === "desktop" &&
+            !school.current().on &&
+            settings.get().activeTab !== "json"
+        )
             document.body.appendChild(overlay);
     });
     window.addEventListener("dragleave", () => {
@@ -344,13 +456,12 @@ function installDrop() {
         e.preventDefault();
         depth = 0;
         overlay.remove();
-        const file = e.dataTransfer.files[0];
         if (school.current().on) return;
         if (edition() !== "desktop") {
             notify("info", "desktop.only");
             return;
         }
-        await loadWordingFile(file, true);
+        await loadWordingFile(e.dataTransfer.files[0], true);
     });
 }
 
@@ -384,6 +495,15 @@ addPaletteSource(() => [
         title: t("tabs.close"),
         shortcut: "Ctrl+W",
         run: () => closeTab(settings.get().activeTab),
+    },
+    {
+        group: "commands",
+        title: settings.get().stripCollapsed
+            ? t("tabs.expandStrip")
+            : t("tabs.collapseStrip"),
+        shortcut: "Ctrl+B",
+        run: () =>
+            settings.set({ stripCollapsed: !settings.get().stripCollapsed }),
     },
     { group: "commands", title: t("set.onboardingAgain"), run: restartWizard },
     {
@@ -423,11 +543,17 @@ async function boot() {
         );
         if (btn) btn.replaceWith(notificationButton());
     });
+    document.addEventListener("studio:generated", () => {
+        const c = document.querySelector(".crumb-status");
+        if (c) c.textContent = generationSummary();
+    });
     reconcileTabs();
     settings.subscribe(() => render());
     window
         .matchMedia("(prefers-color-scheme: dark)")
         .addEventListener("change", applyTheme);
+    // Scheduled settings take effect at their minute without a restart.
+    setInterval(applyTheme, 30_000);
     installKeys();
     installDrop();
     installGlobalContextMenu(openPalette);

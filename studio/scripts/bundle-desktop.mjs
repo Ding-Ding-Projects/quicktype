@@ -7,7 +7,9 @@ await build({
     entryPoints: [
         fileURLToPath(new URL("../shared/engine-node.mjs", import.meta.url)),
     ],
-    outfile: fileURLToPath(new URL("../desktop/engine.bundle.cjs", import.meta.url)),
+    outfile: fileURLToPath(
+        new URL("../desktop/engine.bundle.cjs", import.meta.url),
+    ),
     bundle: true,
     platform: "node",
     format: "cjs",

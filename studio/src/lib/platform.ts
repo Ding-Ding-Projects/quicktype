@@ -87,14 +87,15 @@ declare global {
 export const host: DesktopHost | null =
     typeof window !== "undefined" ? (window.studioHost ?? null) : null;
 
-export type Edition = "desktop" | "web" | "appliance";
+export type Edition = "desktop" | "web" | "appliance" | "browser";
 
 export function edition(): Edition {
     if (host) return "desktop";
     const meta = document
         .querySelector('meta[name="studio-edition"]')
         ?.getAttribute("content");
-    return meta === "appliance" ? "appliance" : "web";
+    if (meta === "appliance" || meta === "browser") return meta;
+    return "web";
 }
 
 export const BUILD = {
@@ -112,8 +113,13 @@ export const BUILD = {
 export const DESKTOP_DOWNLOAD_URL =
     "https://github.com/Ding-Ding-Projects/quicktype/releases?q=studio&expanded=true";
 
+/** Thrown when an edition has no server to run the TypeScript compiler. */
+export const NO_SERVER_MESSAGE =
+    "TypeScript input needs the TypeScript compiler, which this page cannot run in your browser. Use the desktop app or the self-hosted container for TypeScript input; every other source kind works here.";
+
 /** Can the server do TypeScript input for the web editions? */
 export async function serverGenerate(request: unknown): Promise<unknown> {
+    if (edition() === "browser") throw new Error(NO_SERVER_MESSAGE);
     const res = await fetch("api/generate", {
         method: "POST",
         headers: { "content-type": "application/json" },

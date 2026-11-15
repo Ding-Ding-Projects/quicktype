@@ -12,6 +12,7 @@
             "!**/packages/**/*/out",
             "!**/packages/**/*/node_modules",
             "!**/studio/release",
+            "!design",
             "!**/site/dist",
             "!**/studio/desktop/engine.bundle.cjs",
             "!**/studio/desktop/engine.bundle.cjs.LEGAL.txt"

@@ -54,7 +54,7 @@ npm run serve                       # run the self-hosted server on port 8080
 - `desktop/` is the Electron shell: a narrow preload bridge, the extension host and the updater.
 - `server/server.mjs` serves the interface plus `/api/generate`, `/api/languages`, `/api/status`, `/healthz` and the `/appliance` status page.
 - `appliance/` holds the LinuxKit image recipe.
-- `../site/` builds the website from `../docs/studio/`.
+- `../site/` builds the website from `../docs/studio/` and bundles this interface as an in-browser edition (`STUDIO_EDITION=browser`) on its Use it now page, so run `npm ci` here before building the site.
 
 </details>
 

@@ -68,7 +68,63 @@ export async function showWizard() {
             root.querySelector<HTMLElement>("#wizard-heading")?.focus();
         };
         let body: HTMLElement;
-        if (step === 0) body = h("p", { class: "lead" }, t("wizard.s1Body"));
+        if (step === 0)
+            body = h(
+                "div",
+                { class: "stack", style: "gap:18px" },
+                h("p", { class: "lead" }, t("wizard.s1Body")),
+                h(
+                    "div",
+                    { class: "wizard-hero glass" },
+                    h(
+                        "pre",
+                        { class: "code-text", "aria-label": "Sample input" },
+                        '{\n  "id": 1,\n  "name": "Bulbasaur",\n  "type": ["Grass"]\n}',
+                    ),
+                    h(
+                        "span",
+                        { class: "wizard-arrow", "aria-hidden": "true" },
+                        icon("generate", 22),
+                    ),
+                    h(
+                        "pre",
+                        {
+                            class: "code-text",
+                            "aria-label": "Generated TypeScript",
+                        },
+                        "interface Pokemon {\n  id:   number;\n  name: string;\n  type: string[];\n}",
+                    ),
+                ),
+                h(
+                    "div",
+                    { class: "wizard-features" },
+                    ...[
+                        [
+                            "generate",
+                            "27 languages",
+                            "TypeScript, Swift, Kotlin, Rust, Go, C# and more, with serializers.",
+                        ],
+                        [
+                            "json",
+                            "A full JSON editor",
+                            "Tree, code, split and table views with undo, find and validation.",
+                        ],
+                        [
+                            "pin",
+                            "Private by design",
+                            "Your data and settings never leave this device.",
+                        ],
+                    ].map(([ico, title, text]) =>
+                        h(
+                            "div",
+                            { class: "wizard-feature" },
+                            icon(ico, 20),
+                            h("strong", null, title),
+                            h("span", { class: "small muted" }, text),
+                        ),
+                    ),
+                ),
+            );
         else if (step === 1)
             body = h(
                 "div",

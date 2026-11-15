@@ -38,6 +38,7 @@ for (let i = 0; i < 5; i++) {
 await new Promise((r) => setTimeout(r, 1500));
 await shot("03-generate");
 const tabs = [
+    "json",
     "samples",
     "languages",
     "history",

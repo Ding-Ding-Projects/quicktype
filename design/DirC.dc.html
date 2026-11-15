@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Direction C, Flow canvas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#5EEAD4}a:hover{color:#99F6E4}
+button{font:inherit;cursor:pointer}
+.k{color:#F0ABFC}.t{color:#5EEAD4}.s{color:#FDBA74}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; position: relative; overflow: hidden; background-color: #0E1117; background-image: radial-gradient(rgba(148,163,184,.16) 1px, transparent 1px); background-size: 22px 22px; color: #E2E8F0; font-family: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+<svg aria-hidden="true" width="1440" height="900" style="position: absolute; inset: 0">
+<path d="M 392 330 C 470 330, 470 300, 540 300" fill="none" stroke="#5EEAD4" stroke-width="2"></path>
+<path d="M 880 250 C 960 250, 960 160, 1040 160" fill="none" stroke="#5EEAD4" stroke-width="2"></path>
+<path d="M 880 330 C 960 330, 960 420, 1040 420" fill="none" stroke="#F0ABFC" stroke-width="2" stroke-dasharray="6 5"></path>
+<path d="M 880 400 C 960 400, 960 680, 1040 680" fill="none" stroke="#FDBA74" stroke-width="2" stroke-dasharray="6 5"></path>
+<circle cx="392" cy="330" r="5" fill="#0E1117" stroke="#5EEAD4" stroke-width="2"></circle>
+<circle cx="540" cy="300" r="5" fill="#0E1117" stroke="#5EEAD4" stroke-width="2"></circle>
+<circle cx="1040" cy="160" r="5" fill="#0E1117" stroke="#5EEAD4" stroke-width="2"></circle>
+<circle cx="1040" cy="420" r="5" fill="#0E1117" stroke="#F0ABFC" stroke-width="2"></circle>
+<circle cx="1040" cy="680" r="5" fill="#0E1117" stroke="#FDBA74" stroke-width="2"></circle>
+</svg>
+
+<header style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); height: 48px; display: flex; align-items: center; gap: 6px; padding: 0 6px 0 14px; border-radius: 24px; background: rgba(15,18,26,.9); box-shadow: inset 0 0 0 1px rgba(148,163,184,.2), 0 16px 40px rgba(0,0,0,.5)">
+<span style="font-weight: 700; letter-spacing: -0.01em; margin-right: 8px">quicktype</span>
+<button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #5EEAD4; color: #042F2E; font-weight: 600">+ Output</button>
+<button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: rgba(148,163,184,.12); color: #E2E8F0">Samples</button>
+<button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: rgba(148,163,184,.12); color: #E2E8F0">Find  ⌃⇧F</button>
+<span style="width: 1px; height: 22px; background: rgba(148,163,184,.25); margin: 0 4px"></span>
+<button aria-label="Zoom out" style="width: 36px; height: 36px; border-radius: 18px; border: 0; background: transparent; color: #CBD5E1">−</button>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #94A3B8">100%</span>
+<button aria-label="Zoom in" style="width: 36px; height: 36px; border-radius: 18px; border: 0; background: transparent; color: #CBD5E1">+</button>
+</header>
+
+<nav aria-label="Tabs" style="position: absolute; left: 16px; top: 16px; bottom: 16px; width: 56px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 72px">
+<sc-for list="{{rail}}" as="r" hint-placeholder-count="6">
+<button aria-label="{{r.label}}" style="{{r.style}}">{{r.short}}</button>
+</sc-for>
+</nav>
+
+<article aria-label="Source node" style="position: absolute; left: 112px; top: 230px; width: 280px; border-radius: 18px; background: #161B26; box-shadow: inset 0 0 0 1px rgba(94,234,212,.45), 0 20px 50px rgba(0,0,0,.45); overflow: hidden">
+<div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(94,234,212,.08)">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #5EEAD4"></span>
+<span style="flex: 1; font-weight: 600">pokedex.json</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #94A3B8">JSON · 14 lines</span>
+</div>
+<pre style="margin: 0; padding: 12px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; white-space: pre; color: #CBD5E1">{ <span class="s">"pokemon"</span>: [{
+    <span class="s">"id"</span>: 1,
+    <span class="s">"name"</span>: <span class="s">"Bulbasaur"</span>,
+    <span class="s">"type"</span>: [<span class="s">"Grass"</span>],
+    <span class="s">"next_evolution"</span>: [ … ]
+}]}</pre>
+</article>
+
+<article aria-label="Inferred schema node" style="position: absolute; left: 540px; top: 200px; width: 340px; border-radius: 18px; background: #161B26; box-shadow: inset 0 0 0 1px rgba(148,163,184,.25), 0 20px 50px rgba(0,0,0,.45); padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px; padding: 0 2px">
+<span style="flex: 1; font-weight: 600">Inferred types</span>
+<span style="height: 22px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 11px; background: rgba(94,234,212,.14); color: #5EEAD4; font-size: 12px">3 types</span>
+</div>
+<sc-for list="{{types}}" as="ty" hint-placeholder-count="3">
+<div style="border-radius: 12px; background: #1D2331; padding: 8px 10px">
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px"><span style="{{ty.badge}}">{{ty.kind}}</span><span style="font-weight: 600">{{ty.name}}</span></div>
+<sc-for list="{{ty.fields}}" as="f" hint-placeholder-count="3">
+<div style="display: flex; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7"><span style="flex: 1; color: #CBD5E1">{{f.n}}</span><span style="color: #94A3B8">{{f.t}}</span></div>
+</sc-for>
+</div>
+</sc-for>
+</article>
+
+<sc-for list="{{outs}}" as="o" hint-placeholder-count="3">
+<article aria-label="{{o.label}} output node" style="{{o.box}}">
+<div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid rgba(148,163,184,.14)">
+<span style="{{o.dot}}"></span><span style="flex: 1; font-weight: 600">{{o.label}}</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #94A3B8">{{o.meta}}</span>
+<button style="height: 28px; padding: 0 10px; border-radius: 14px; border: 0; background: rgba(148,163,184,.14); color: #E2E8F0; font-size: 12px">Copy</button>
+</div>
+<pre style="margin: 0; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; white-space: pre; color: #CBD5E1">{{o.code}}</pre>
+</article>
+</sc-for>
+
+<div role="status" style="position: absolute; left: 112px; bottom: 24px; display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 14px; border-radius: 18px; background: rgba(15,18,26,.9); box-shadow: inset 0 0 0 1px rgba(148,163,184,.2); font-size: 13px; color: #CBD5E1">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #5EEAD4"></span> 3 outputs up to date · 41 ms · on this computer
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['Generate', 'Gen'], ['History', 'His'], ['Tools', 'Tls'], ['Extensions', 'Ext'], ['Docs', 'Doc'], ['Settings', 'Set']];
+    const rail = R.map(([label, short], i) => ({ label, short, style: 'width: 48px; height: 48px; border-radius: 16px; border: 0; font-size: 11px; font-weight: 600; ' + (i === 0 ? 'background: #5EEAD4; color: #042F2E' : 'background: rgba(22,27,38,.9); color: #94A3B8; box-shadow: inset 0 0 0 1px rgba(148,163,184,.18)') }));
+    const types = [
+      ['iface', 'Pokemon', '#5EEAD4', [['id', 'integer'], ['name', 'string'], ['type', 'Type[]'], ['next_evolution', 'Evolution[]']]],
+      ['iface', 'Evolution', '#5EEAD4', [['num', 'string'], ['name', 'string']]],
+      ['enum', 'Type', '#FDBA74', [['Grass', 'case'], ['Poison', 'case']]],
+    ].map(([kind, name, col, fields]) => ({ kind, name, fields: fields.map(([n, t]) => ({ n, t })), badge: 'font-family: IBM Plex Mono, monospace; font-size: 10px; padding: 1px 6px; border-radius: 5px; color: ' + col + '; background: rgba(255,255,255,.06)' }));
+    const outs = [
+      ['TypeScript', '#5EEAD4', 50, 'live', 'interface Pokemon {\n  id: number;\n  name: string;\n  type: Type[];\n}'],
+      ['Swift', '#F0ABFC', 330, 'live', 'struct Pokemon: Codable {\n  let id: Int\n  let name: String\n  let type: [TypeElement]\n}'],
+      ['Rust', '#FDBA74', 590, 'live', '#[derive(Serialize)]\npub struct Pokemon {\n  pub id: i64,\n  pub name: String,\n}'],
+    ].map(([label, col, top, meta, code]) => ({ label, meta, code, dot: 'width: 8px; height: 8px; border-radius: 4px; background: ' + col,
+      box: 'position: absolute; left: 1040px; top: ' + top + 'px; width: 330px; border-radius: 18px; background: #161B26; overflow: hidden; box-shadow: inset 0 0 0 1px ' + col + '55, 0 20px 50px rgba(0,0,0,.45)' }));
+    return { rail, types, outs };
+  }
+}
+</script>
+</body>
+</html>

@@ -280,6 +280,17 @@ const F = [
     ],
     [
         "running",
+        "in-your-browser",
+        "In your browser",
+        "The complete generator and JSON editor, running on the website's Use it now page with nothing to install.",
+        "Open Use it now on the website, or open it in its own window. Everything works as in the other editions: every language and option, the inferred-types inspector, the JSON editor with all four views, tabs, settings, history and the command palette. The engine runs in a worker inside your browser.",
+        "TypeScript input needs the TypeScript compiler, which a browser page cannot run; it says so and points to the desktop app or the container. Personal wording files, extensions and saving straight into folders also need the desktop app.",
+        "Nothing you paste or open is sent anywhere. Settings and history stay in this browser's storage for the website's address.",
+        "Open Use it now, generate Swift from the Pokédex sample, then open the JSON editor and run $..name.",
+        ["desktop-app", "self-hosted"],
+    ],
+    [
+        "running",
         "desktop-app",
         "Desktop app",
         "The full edition for Windows, as an installer that updates itself or as one portable file.",
@@ -310,6 +321,17 @@ const F = [
         "The appliance serves only the Studio page on port 8080 and has no remote login.",
         "Boot the ISO in a virtual machine, open the address, and generate code.",
         ["self-hosted"],
+    ],
+    [
+        "generating",
+        "json-editor",
+        "JSON editor",
+        "A full editor for JSON documents with four views of the same document: Tree, Code, Split and Table. Edit keys and values in place, switch a value between object, array, string, number, boolean and null, add, duplicate, move and drag nodes, and undo or redo any step from a labelled history.",
+        "Open the JSON editor tab. Double-click a key or value to edit it; F2 renames, Enter edits, Delete removes, Ctrl+D duplicates, Alt+Up and Alt+Down move, Insert adds a child, Ctrl+Z and Ctrl+Y undo and redo. Find filters the tree (plain text or regex). The $ bar runs a JSONPath query such as $..name, $.items[*].id or $.list[1:3] and selects every hit. Table shows an array of objects as an editable grid. Generate types from this document (or from the selected node) sends it straight to Generate.",
+        "Text with an error stays in the Code view with its line and column while the tree keeps the last valid version. Comments and trailing commas are accepted and removed. A rename that would duplicate a key, a number that is not a number and a move into a node's own child are refused with a message and nothing changes.",
+        "Documents stay on this device. Validation uses a schema you lock from the current shape or load from a file; nothing is fetched.",
+        "Open a sample, rename a key, change a type, drag a node, run $..name, lock the shape, break it, then undo back to the start.",
+        ["generate", "history"],
     ],
 ];
 

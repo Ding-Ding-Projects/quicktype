@@ -32,9 +32,15 @@ Ticks are claims: an item is ticked only when it is built and was checked in the
 - [x] File converter and Base64 toolkit
 - [x] Extensions: versioned manifests, any-language JSON line protocol, permissions with consent, time and size limits, two built-in extensions
 - [x] Offline docs browser; changelog viewer; version and build date on the front screen
-- [ ] Tab groups and the group-level searches
-- [ ] Per-tab appearance editor
-- [ ] Scheduled and external settings sources
+- [x] Tab groups with names and colours; searches over the strip, inside each group, over group names and across every tab
+- [x] Per-tab appearance editor and a deeper per-element editor (font, size, weight, spacing, colours, border, radius, padding, shadow) with per-property reset
+- [x] Colour picker with area, hue and alpha sliders and HEX, RGB, HSL and OKLCH fields
+- [x] Logo editor with crop, zoom, fit, background and size previews
+- [x] Scheduled settings (theme, language, density by time of day), info buttons with defaults on every setting, focus timer
+- [x] Midnight forge redesign: syntax-coloured editors with line numbers, inferred-types inspector, floating command bar, custom selects
+- [x] JSON editor: Tree, Code, Split and Table views, inline editing, type switching, drag and drop, labelled undo and redo, regex find, JSONPath queries, schema validation, lenient import, transforms, hand-off to Generate
+- [x] Full generator and JSON editor running on the website itself, in the visitor's browser
+- [ ] External settings sources
 - [ ] Local file conversion beyond text formats (images, documents)
 - [ ] Dim sum release code names from the public catalogue (releases currently say none was chosen)
 

@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 // Builds the quicktype Studio website into site/dist.
 // The site documents the app and offers downloads; it is not the app.
 //   node build.mjs            (set STUDIO_RELEASE_JSON to a verified release manifest to show the download button)
@@ -26,24 +27,37 @@ const commit = process.env.GITHUB_SHA?.slice(0, 12) ?? "local";
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, "docs"), { recursive: true });
+
+// The full Studio interface ships inside the site and runs entirely in the
+// visitor's browser: the engine works in a worker and nothing is sent anywhere.
+const studioDir = join(repo, "studio");
+if (!existsSync(join(studioDir, "node_modules", "vite")))
+    throw new Error(
+        "The site includes the full Studio interface. Run `npm ci` in studio/ (after building quicktype-core) before building the site.",
+    );
+execFileSync(
+    process.execPath,
+    [join(studioDir, "node_modules", "vite", "bin", "vite.js"), "build"],
+    {
+        cwd: studioDir,
+        stdio: "inherit",
+        env: {
+            ...process.env,
+            STUDIO_EDITION: "browser",
+            STUDIO_OUT: join(out, "app"),
+        },
+    },
+);
 mkdirSync(join(out, "fonts"), { recursive: true });
 
 // Fonts are vendored from the installed font packages; nothing loads from a CDN.
 const fontFiles = [
     [
-        "@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2",
-        "body-400.woff2",
+        "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2",
+        "body.woff2",
     ],
     [
-        "@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-700-normal.woff2",
-        "body-700.woff2",
-    ],
-    [
-        "@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2",
-        "display.woff2",
-    ],
-    [
-        "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2",
+        "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2",
         "mono.woff2",
     ],
 ];
@@ -103,6 +117,7 @@ const release = process.env.STUDIO_RELEASE_JSON
 
 const NAV = [
     ["index", "Home", "主頁"],
+    ["app", "Use it now", "即刻用"],
     ["features", "Features", "功能"],
     ["docs", "Docs", "文件"],
     ["download", "Download", "下載"],
@@ -150,7 +165,7 @@ function page({ id, title, description, body, depth = 0 }) {
 <a class="skip" href="#main">Skip to content</a>
 <header class="top">
 <a class="brand" href="${up}"><img src="${up}icon.svg" width="30" height="30" alt=""><span>quicktype Studio</span></a>
-<span class="pill">This site documents the app. It is not the app.</span>
+<span class="pill">Docs, downloads and the full tool, in your browser.</span>
 <button class="palette-btn" type="button" data-open-palette aria-keyshortcuts="Control+Shift+F"><span>Search the site</span><kbd>Ctrl+Shift+F</kbd></button>
 </header>
 <div class="shell">
@@ -181,21 +196,34 @@ write(
             "Turn sample JSON, JSON Schema, TypeScript or GraphQL into typed models with serializers in 27 languages, on your own machine.",
         body: `<section class="hero">
 <div class="hero-text">
-<h1>Turn sample JSON into real types in 27 languages.</h1>
-<p class="lead">quicktype Studio reads JSON, JSON Schema, TypeScript or GraphQL and writes models with serializers for TypeScript, Swift, Kotlin, Rust, Go, C# and more. It runs on your machine. Your data stays there.</p>
-<div class="actions">${release ? `<a class="btn primary big" href="${esc(release.portableUrl)}">Download for Windows</a>` : `<a class="btn primary big" href="download.html">Get the desktop app</a>`}<a class="btn big" href="#run">Other ways to run it</a></div>
+<h1>Sample JSON in.<br><span class="accent">Typed models out.</span></h1>
+<p class="lead">quicktype Studio turns JSON, JSON Schema, TypeScript or GraphQL into models with serializers for 27 languages, and ships a full JSON editor with tree, code, split and table views. It runs on your machine. Your data stays there.</p>
+<div class="actions"><a class="btn primary big" href="app.html">Use it now, in your browser</a>${release ? `<a class="btn big" href="${esc(release.portableUrl)}">Download for Windows</a>` : `<a class="btn big" href="download.html">Get the desktop app</a>`}<a class="btn big" href="#run">Other ways to run it</a></div>
 </div>
 ${existsSync(join(out, "captures", "generate.png")) ? `<img class="hero-shot" src="captures/generate.png" width="1440" height="900" alt="quicktype Studio generating TypeScript types from a Pokédex sample">` : ""}
 </section>
 <section id="run" class="band">
-<h2>Three ways to run it</h2>
+<h2>Four ways to run it</h2>
 <div class="cards">
+<article class="card"><h3>Right here, in your browser</h3><p>The complete generator and JSON editor, running on this page. The engine works inside your browser, so nothing you paste leaves this device. TypeScript input is the one exception: it needs the desktop app or the container.</p><a href="app.html">Use it now</a></article>
 <article class="card violet"><h3>Desktop app</h3><p>An installer that updates itself, or one portable file, for Windows. Every feature, including personal wording files, extensions and saving straight into your project folders.</p><a href="download.html">Download</a></article>
 <article class="card teal"><h3>Self-hosted container</h3><p>Run the web version on a server on your network and open it from any browser.</p><pre><code>docker compose -f studio/compose.yaml up -d</code></pre><a href="docs/running--self-hosted.html">Container guide</a></article>
 <article class="card warm"><h3>Appliance image</h3><p>A small system image that boots straight into Studio. Flash it to a spare machine or boot it in a virtual machine.</p><a href="docs/running--appliance.html">Appliance guide</a></article>
 </div>
-<div class="callout"><p>If a feature does not work in the web version or on the appliance, download the desktop app. It is the only edition that can read files you drop on its window and run extensions.</p><a class="btn accent" href="download.html">Get the desktop app</a></div>
+<div class="callout"><p>If a feature does not work in your browser, the web version or on the appliance, download the desktop app. It is the only edition that can read files you drop on its window and run extensions.</p><a class="btn accent" href="download.html">Get the desktop app</a></div>
 </section>`,
+    }),
+);
+
+write(
+    "app.html",
+    page({
+        id: "app",
+        title: "Use quicktype Studio in your browser",
+        description:
+            "The complete quicktype Studio generator and JSON editor, running in your browser. Nothing you paste is sent anywhere.",
+        body: `<div class="app-head"><div><h1>Use it now</h1><p class="lead">The complete generator and JSON editor, running in this page. The engine works inside your browser, so what you paste or open stays on this device. TypeScript input, personal wording files and extensions need the <a href="download.html">desktop app</a>.</p></div><a class="btn" href="app/index.html" target="_blank" rel="noopener">Open in its own window</a></div>
+<iframe class="app-frame" src="app/index.html" title="quicktype Studio, running in your browser" allow="clipboard-read; clipboard-write; local-fonts"></iframe>`,
     }),
 );
 

@@ -9,6 +9,7 @@ import { setActiveVocabulary } from "./i18n";
 import { removeKey } from "./store";
 
 const CACHE_KEY = "studio.private-wording.v1";
+const AT_KEY = "studio.private-wording.loaded-at";
 let active: Vocabulary | null = null;
 const listeners = new Set<() => void>();
 
@@ -57,6 +58,7 @@ export async function applyFile(
     active = res.vocabulary;
     try {
         localStorage.setItem(CACHE_KEY, JSON.stringify(res.vocabulary));
+        localStorage.setItem(AT_KEY, new Date().toISOString());
     } catch {
         /* the wording still applies for this session */
     }
@@ -67,5 +69,26 @@ export async function applyFile(
 export function clearWording() {
     active = null;
     removeKey(CACHE_KEY);
+    removeKey(AT_KEY);
     emit();
+}
+
+/** Facts about the active file that reveal nothing of its contents or name. */
+export function wordingFacts() {
+    if (!active) return null;
+    const keys = Object.keys(active.entries);
+    const values = Object.values(active.entries);
+    let loadedAt: string | null = null;
+    try {
+        loadedAt = localStorage.getItem(AT_KEY);
+    } catch {
+        loadedAt = null;
+    }
+    return {
+        entries: keys.length,
+        bytes: new TextEncoder().encode(JSON.stringify(active)).length,
+        longestKey: Math.max(0, ...keys.map((k) => [...k].length)),
+        longestValue: Math.max(0, ...values.map((v) => [...v].length)),
+        loadedAt,
+    };
 }

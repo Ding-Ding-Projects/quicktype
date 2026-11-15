@@ -79,6 +79,26 @@ export const ICONS: Record<string, string> = {
     regex: "M5 18a1 1 0 1 0 0 .1M14 5v8M10.5 7l7 4M10.5 11l7-4",
     sun: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M2 12h2M20 12h2",
     play: "M7 5l12 7-12 7z",
+    chevron: "M6 9l6 6 6-6",
+    json: "M8 4C5 4 5 6 5 8s-1 3-2 4c1 1 2 2 2 4s0 4 3 4M16 4c3 0 3 2 3 4s1 3 2 4c-1 1-2 2-2 4s0 4-3 4",
+    undo: "M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3",
+    redo: "M15 14l5-5-5-5M20 9H9a5 5 0 0 0 0 10h3",
+    expand: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5",
+    collapse: "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5",
+    sort: "M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4",
+    table: "M4 5h16v14H4zM4 10h16M4 15h16M10 5v14",
+    tree: "M5 4v16M5 8h6M5 14h6M11 6h8v4h-8zM11 12h8v4h-8z",
+    code: "M9 7l-5 5 5 5M15 7l5 5-5 5",
+    split: "M4 5h16v14H4zM12 5v14",
+    up: "M12 19V5M6 11l6-6 6 6",
+    down: "M12 5v14M6 13l6 6 6-6",
+    duplicate: "M9 9h11v11H9zM5 15V4h11",
+    group: "M3 7h7l2 2h9v10H3z",
+    sidebar: "M4 5h16v14H4zM9 5v14",
+    filter: "M4 5h16l-6 8v6l-4-2v-4z",
+    check2: "M4 12l5 5L20 6",
+    wand: "M5 19L17 7M15 5l1-2 1 2 2 1-2 1-1 2-1-2-2-1zM19 13l.5-1 .5 1 1 .5-1 .5-.5 1-.5-1-1-.5z",
+    timer: "M12 8v5l3 2M9 3h6M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z",
 };
 
 export function icon(name: string, size = 20): SVGSVGElement {
@@ -115,7 +135,7 @@ export function logoMark(
         return wrap;
     }
     const colors: Record<string, [string, string, string]> = {
-        brace: ["var(--primary)", "#FFFFFF", "#FFB38A"],
+        brace: ["#15151d", "#c6f432", "#e9e6f2"],
         sunset: ["#C2410C", "#FFFFFF", "#FFE1CF"],
         mint: ["#0F766E", "#FFFFFF", "#B9F3E4"],
         ink: ["#1C1B1F", "#FFFFFF", "#C9BFFF"],

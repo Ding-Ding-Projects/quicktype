@@ -28,6 +28,7 @@ export const pages: Page[] = [];
 
 const ORDER = [
     "generate",
+    "json",
     "samples",
     "languages",
     "history",

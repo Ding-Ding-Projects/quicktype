@@ -1,4 +1,5 @@
-# Publishes the quicktype Studio website (landing page, docs, downloads) to GitHub Pages.
+# Publishes the quicktype Studio website (landing page, the full tool in the browser,
+# docs, downloads) to GitHub Pages.
 # It rebuilds after every push and after each Studio release finishes, so the
 # download button only ever points at a published, verified asset.
 name: Studio site
@@ -48,7 +49,12 @@ jobs:
                     url=$(node -p 'require("./release.json").portableUrl')
                     curl -fsSIL "$url" > /dev/null && echo "STUDIO_RELEASE_JSON=$PWD/release.json" >> "$GITHUB_ENV" || echo "asset did not resolve; the button stays hidden"
                   fi
-            - name: Build the site
+            - name: Build the engine and the Studio interface dependencies
+              run: |
+                  npm ci
+                  npm run build --workspace quicktype-core --workspace quicktype-graphql-input --workspace quicktype-typescript-input
+                  npm ci --prefix studio
+            - name: Build the site, including the full in-browser Studio
               working-directory: site
               run: |
                   npm ci
