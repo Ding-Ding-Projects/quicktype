@@ -1,0 +1,11 @@
+{
+    "manifestVersion": 1,
+    "id": "code-stats",
+    "name": "Code stats",
+    "version": "1.0.0",
+    "description": "Counts lines, blank lines and declared types in the generated code.",
+    "command": ["node", "index.js"],
+    "permissions": ["read-generated-code"],
+    "commands": [{ "id": "stats", "title": "Count lines and types" }],
+    "limits": { "timeoutMs": 5000, "maxOutputBytes": 65536 }
+}

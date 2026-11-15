@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>First-run setup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F7F3EC}
+a{color:#4B2FE0}a:hover{color:#3420B0}
+button,input{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #F7F3EC; color: #1C1B1F; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px">
+
+<aside style="flex: 1 1 340px; max-width: 460px; padding: 48px 40px; display: flex; flex-direction: column; gap: 28px; background: #4B2FE0; color: #FFFFFF; position: relative; overflow: hidden">
+<svg aria-hidden="true" width="360" height="360" viewBox="0 0 200 200" style="position: absolute; right: -120px; bottom: -110px; opacity: .22"><path d="M100 10c14 0 18 14 30 18s26-4 33 8-3 23 0 36 14 21 8 33-21 10-30 19-9 25-23 28-21-12-34-12-24 14-35 6-4-24-12-34-24-11-24-25 15-17 18-30-6-26 4-35 24-1 35-8 16-4 30-4z" fill="#FFB38A"></path></svg>
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="34" height="34" viewBox="0 0 32 32" role="img" aria-label="quicktype Studio logo"><rect width="32" height="32" rx="10" fill="#FFFFFF"></rect><path d="M11 9c-3 0-3 2-3 4s-1 3-2 3c1 0 2 1 2 3s0 4 3 4" fill="none" stroke="#4B2FE0" stroke-width="2.4" stroke-linecap="round"></path><path d="M16 11h10M21 11v12" fill="none" stroke="#C2410C" stroke-width="2.6" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 18px">quicktype Studio</span>
+</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 44px; line-height: 1.05; letter-spacing: -0.02em; position: relative">Set up in five short steps.</h1>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; position: relative">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+<li style="{{s.row}}">
+<span style="{{s.dot}}">{{s.mark}}</span>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 700">{{s.title}}</span><span style="font-size: 13px; opacity: .85">{{s.state}}</span></span>
+</li>
+</sc-for>
+</ol>
+<p style="margin: 0; font-size: 13px; opacity: .85; position: relative">Progress is saved after every step. Close the window and you will pick up here.</p>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 48px 56px; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5A5560">Step 2 of 5</p>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 36px; line-height: 1.1; letter-spacing: -0.02em">Which languages do you write?</h2>
+<p style="margin: 0; max-width: 640px; color: #3D3842; line-height: 1.55">These open as chips above the generated code. The other 20 languages stay one click away under More.</p>
+
+<div role="group" aria-label="Favorite languages" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 12px; max-width: 860px">
+<sc-for list="{{langs}}" as="l" hint-placeholder-count="9">
+<button aria-pressed="{{l.on}}" onClick="{{l.pick}}" style="{{l.card}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; opacity: .8">{{l.ext}}</span>
+<span style="font-weight: 700; font-size: 17px">{{l.label}}</span>
+</button>
+</sc-for>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E2DACB; max-width: 860px">
+<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#0F766E" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v12H8l-4 4z"></path></svg>
+<span style="flex: 1; color: #2E2A33">Preview: {{count}} languages chosen. Generate will open with <strong>{{first}}</strong>.</span>
+</div>
+
+<div style="flex: 1"></div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; max-width: 860px">
+<button style="height: 48px; padding: 0 22px; border-radius: 24px; border: 1px solid #B8AE9C; background: transparent; color: #1C1B1F">Back</button>
+<span style="flex: 1"></span>
+<button style="height: 48px; padding: 0 22px; border-radius: 24px; border: 0; background: transparent; color: #4B2FE0; font-weight: 700">Skip this step</button>
+<button style="height: 48px; padding: 0 28px; border-radius: 24px; border: 0; background: #4B2FE0; color: #FFFFFF; font-weight: 700">Next: appearance</button>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { picked: ['TypeScript', 'Swift', 'Rust'] }; }
+  renderVals() {
+    const S = [['Welcome', 'Done'], ['Favorite languages', 'In progress'], ['Appearance and language', 'Next'], ['Sample data', 'Optional'], ['Open your workspace', 'Last']];
+    const steps = S.map(([title, state], i) => {
+      const done = i === 0, cur = i === 1;
+      return { title, state, mark: done ? '✓' : String(i + 1),
+        row: 'display: flex; align-items: center; gap: 14px; min-height: 52px; padding: 4px 12px; border-radius: 18px; ' + (cur ? 'background: rgba(255,255,255,.16)' : ''),
+        dot: 'width: 32px; height: 32px; flex: 0 0 32px; border-radius: 16px; display: grid; place-items: center; font-weight: 700; ' + (done ? 'background: #FFB38A; color: #2A1306' : cur ? 'background: #FFFFFF; color: #4B2FE0' : 'border: 2px solid rgba(255,255,255,.7)') };
+    });
+    const L = [['TypeScript', '.ts'], ['Swift', '.swift'], ['Kotlin', '.kt'], ['Rust', '.rs'], ['Go', '.go'], ['Python', '.py'], ['C#', '.cs'], ['Java', '.java'], ['Dart', '.dart']];
+    const langs = L.map(([label, ext]) => {
+      const on = this.state.picked.includes(label);
+      return { label, ext, on: String(on),
+        pick: () => this.setState({ picked: on ? this.state.picked.filter((x) => x !== label) : [...this.state.picked, label] }),
+        card: 'min-height: 88px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; padding: 14px 18px; border-radius: 24px; text-align: left; ' + (on ? 'border: 0; background: #E4DEFF; color: #21134F; box-shadow: inset 0 0 0 2px #4B2FE0' : 'border: 1px solid #D4CBBB; background: #FFFFFF; color: #1C1B1F') };
+    });
+    return { steps, langs, count: this.state.picked.length, first: this.state.picked[0] ?? 'TypeScript' };
+  }
+}
+</script>
+</body>
+</html>

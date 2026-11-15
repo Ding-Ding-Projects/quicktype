@@ -1,0 +1,11 @@
+{
+    "manifestVersion": 1,
+    "id": "header-stamp",
+    "name": "Header stamp",
+    "version": "1.0.0",
+    "description": "Returns the generated code with a dated, do-not-edit comment header on top.",
+    "command": ["node", "index.js"],
+    "permissions": ["read-generated-code"],
+    "commands": [{ "id": "stamp", "title": "Add a header comment" }],
+    "limits": { "timeoutMs": 5000, "maxOutputBytes": 4194304 }
+}

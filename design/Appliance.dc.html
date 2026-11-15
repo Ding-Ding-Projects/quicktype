@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>quicktype Appliance</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#17161C}
+a{color:#FFB38A}a:hover{color:#FFD2B8}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #17161C; color: #EDEAF2; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; font-size: 15px">
+
+<section aria-label="Console" style="flex: 1 1 420px; max-width: 520px; padding: 40px; display: flex; flex-direction: column; gap: 20px; background: #0E0D12; border-right: 1px solid #2A2833">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg width="34" height="34" viewBox="0 0 32 32" role="img" aria-label="quicktype Appliance logo"><rect width="32" height="32" rx="10" fill="#FFB38A"></rect><path d="M11 9c-3 0-3 2-3 4s-1 3-2 3c1 0 2 1 2 3s0 4 3 4" fill="none" stroke="#2A1306" stroke-width="2.4" stroke-linecap="round"></path><path d="M16 11h10M21 11v12" fill="none" stroke="#4B2FE0" stroke-width="2.6" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 18px">quicktype Appliance</span>
+</div>
+<p style="margin: 0; color: #B9B3C6; line-height: 1.55">What the screen on the machine shows after boot. Nothing to log in to here: open the address on any device on the same network.</p>
+<pre aria-label="Boot console output" style="margin: 0; padding: 18px; border-radius: 20px; background: #000000; color: #CDEFD9; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; line-height: 1.75; white-space: pre-wrap">[ ok ] kernel and init ready
+[ ok ] network: address assigned
+[ ok ] container runtime started
+[ ok ] quicktype-studio container healthy
+
+  Open quicktype Studio:
+  http://quicktype.local:8080
+  http://[LAN ADDRESS]:8080
+
+  Appliance admin:  /appliance</pre>
+<div style="display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 20px; background: #1F1D27">
+<div aria-hidden="true" style="width: 84px; height: 84px; flex: 0 0 84px; border-radius: 12px; background: repeating-conic-gradient(#EDEAF2 0 25%, #1F1D27 0 50%) 0 0 / 14px 14px"></div>
+<span style="color: #D9D4E2; font-size: 14px; line-height: 1.5">Scan to open the address on a phone. The code is generated on the machine from its real address.</span>
+</div>
+</section>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 40px; display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.02em">Appliance status</h1>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px">
+
+<article style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 28px; background: #4B2FE0; color: #FFFFFF">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .9">Studio service</span>
+<span style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 28px">Running</span>
+<span style="font-size: 14px; opacity: .9">Container healthy, restarted 0 times</span>
+<a href="#open" style="align-self: flex-start; height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border-radius: 22px; background: #FFFFFF; color: #4B2FE0; font-weight: 700; text-decoration: none">Open Studio</a>
+</article>
+
+<article style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 28px; background: #23212C">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B9B3C6">Updates</span>
+<span style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 22px">Up to date</span>
+<span style="font-size: 14px; color: #D9D4E2">The system image and the Studio container update together, then the machine restarts once.</span>
+<button style="align-self: flex-start; height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #4A4656; background: transparent; color: #EDEAF2">Check for updates</button>
+</article>
+
+<article style="display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 28px; background: #23212C">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B9B3C6">System</span>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px">
+<dt style="color: #B9B3C6">Image</dt><dd style="margin: 0; font-family: 'JetBrains Mono', monospace">[IMAGE VERSION]</dd>
+<dt style="color: #B9B3C6">Studio</dt><dd style="margin: 0; font-family: 'JetBrains Mono', monospace">24.0.0</dd>
+<dt style="color: #B9B3C6">Uptime</dt><dd style="margin: 0">[UPTIME]</dd>
+<dt style="color: #B9B3C6">Disk</dt><dd style="margin: 0">[USED] of [TOTAL]</dd>
+</dl>
+</article>
+
+<article style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 28px; background: #23212C">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B9B3C6">Network</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 15px">[LAN ADDRESS]:8080</span>
+<span style="font-size: 14px; color: #D9D4E2">Reachable only from your local network. Nothing is exposed to the internet.</span>
+</article>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 20px; border-radius: 22px; background: #2A1A12; color: #FFE1CF; align-items: center">
+<span style="flex: 1 1 320px">Restart and power off live under Machine actions. Both ask for confirmation twice before anything happens.</span>
+<button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #9A5B3A; background: transparent; color: #FFE1CF">Machine actions</button>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

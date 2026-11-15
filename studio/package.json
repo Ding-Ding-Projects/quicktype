@@ -1,0 +1,93 @@
+{
+    "name": "quicktype-studio",
+    "productName": "quicktype Studio",
+    "version": "24.0.0",
+    "private": true,
+    "description": "Desktop, self-hosted and appliance editions of quicktype with a redesigned interface",
+    "license": "Apache-2.0",
+    "main": "desktop/main.cjs",
+    "type": "module",
+    "scripts": {
+        "build:core": "npm --prefix .. run build --workspace quicktype-core",
+        "build:web": "vite build",
+        "build": "npm run build:core && npm run build:web",
+        "dev": "vite",
+        "test": "vitest run --config vitest.config.mjs",
+        "serve": "node server/server.mjs",
+        "desktop": "electron .",
+        "package:win": "npm run build:desktop && electron-builder --win portable squirrel --x64 --publish never",
+        "bundle:desktop": "node scripts/bundle-desktop.mjs",
+        "icons": "node scripts/make-icons.mjs",
+        "build:desktop": "npm run build:web && npm run bundle:desktop",
+        "capture": "node scripts/capture.mjs",
+        "capture:desktop": "node scripts/capture-desktop.mjs"
+    },
+    "dependencies": {
+        "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+        "@fontsource-variable/jetbrains-mono": "^5.3.0",
+        "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+        "typescript": "^5.9.3",
+        "vm2": "^3.11.6"
+    },
+    "devDependencies": {
+        "electron": "^38.8.6",
+        "electron-builder": "^26.18.0",
+        "electron-builder-squirrel-windows": "^26.18.0",
+        "esbuild": "^0.28.2",
+        "puppeteer-core": "^24.43.1",
+        "quicktype-core": "file:../packages/quicktype-core",
+        "quicktype-graphql-input": "file:../packages/quicktype-graphql-input",
+        "quicktype-typescript-input": "file:../packages/quicktype-typescript-input",
+        "vite": "^7.3.8",
+        "vitest": "^3.2.7",
+        "yaml": "^2.9.1"
+    },
+    "build": {
+        "appId": "io.github.dingdingprojects.quicktypestudio",
+        "productName": "quicktype Studio",
+        "executableName": "quicktype-studio",
+        "copyright": "Apache-2.0",
+        "directories": {
+            "output": "release",
+            "buildResources": "build"
+        },
+        "files": [
+            "desktop/**",
+            "dist/web/**",
+            "package.json",
+            "!desktop/**/*.map",
+            {
+                "from": "node_modules/typescript/lib",
+                "to": "node_modules/typescript/lib",
+                "filter": [
+                    "lib.*.d.ts"
+                ]
+            }
+        ],
+        "win": {
+            "icon": "build/icon.ico",
+            "signAndEditExecutable": true,
+            "target": [
+                "portable",
+                "squirrel"
+            ]
+        },
+        "portable": {
+            "artifactName": "quicktype-studio-${version}-portable.exe"
+        },
+        "squirrelWindows": {
+            "iconUrl": "https://raw.githubusercontent.com/Ding-Ding-Projects/quicktype/master/studio/build/icon.ico",
+            "artifactName": "quicktype-studio-${version}-setup.exe",
+            "useAppIdAsId": true
+        },
+        "linux": {
+            "target": [
+                "AppImage"
+            ],
+            "category": "Development",
+            "icon": "build/icon.png"
+        },
+        "asar": false
+    },
+    "repository": "https://github.com/Ding-Ding-Projects/quicktype"
+}

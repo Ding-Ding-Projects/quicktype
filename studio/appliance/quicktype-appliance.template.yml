@@ -1,0 +1,42 @@
+# quicktype Studio appliance image (LinuxKit).
+# The @...@ placeholders are filled by appliance/build.sh from the pinned
+# LinuxKit release so every system component comes from one tested set.
+kernel:
+  image: @KERNEL@
+  cmdline: "console=tty0 console=ttyS0 console=ttyAMA0"
+init:
+  - @INIT@
+  - @RUNC@
+  - @CONTAINERD@
+  - @CA_CERTIFICATES@
+onboot:
+  - name: sysctl
+    image: @SYSCTL@
+  - name: dhcpcd
+    image: @DHCPCD@
+    command: ["/sbin/dhcpcd", "--nobackground", "-f", "/dhcpcd.conf", "-1"]
+services:
+  - name: getty
+    image: @GETTY@
+    env:
+      - INSECURE=true
+  - name: rngd
+    image: @RNGD@
+  - name: quicktype-studio
+    image: @STUDIO_IMAGE@
+    net: host
+    readonly: true
+    tmpfs:
+      - /app/work
+    env:
+      - STUDIO_EDITION=appliance
+      - PORT=8080
+      - HOST=0.0.0.0
+files:
+  - path: etc/issue
+    contents: |
+
+      quicktype Studio appliance
+      Open http://<this machine's address>:8080/ from a device on the same network.
+      Status page: http://<this machine's address>:8080/appliance
+

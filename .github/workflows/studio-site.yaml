@@ -1,0 +1,68 @@
+# Publishes the quicktype Studio website (landing page, docs, downloads) to GitHub Pages.
+# It rebuilds after every push and after each Studio release finishes, so the
+# download button only ever points at a published, verified asset.
+name: Studio site
+
+on:
+    push:
+        branches: [master]
+    workflow_run:
+        workflows: ["Studio release"]
+        types: [completed]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+concurrency:
+    group: studio-pages
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+            - name: Find the newest verified release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh api "repos/${GITHUB_REPOSITORY}/releases?per_page=50" > releases.json
+                  node -e '
+                    const rs = require("./releases.json").filter(r => /^studio-v/.test(r.tag_name) && !r.draft);
+                    for (const r of rs) {
+                      const a = r.assets.find(x => /-portable\.exe$/.test(x.name) && x.state === "uploaded");
+                      if (a) {
+                        const v = r.tag_name.replace(/^studio-v/, "");
+                        require("fs").writeFileSync("release.json", JSON.stringify({ version: v, portableUrl: a.browser_download_url, sizeMb: (a.size / 1048576).toFixed(1) }));
+                        console.log("verified release", v, a.browser_download_url);
+                        break;
+                      }
+                    }'
+                  if [ -f release.json ]; then
+                    url=$(node -p 'require("./release.json").portableUrl')
+                    curl -fsSIL "$url" > /dev/null && echo "STUDIO_RELEASE_JSON=$PWD/release.json" >> "$GITHUB_ENV" || echo "asset did not resolve; the button stays hidden"
+                  fi
+            - name: Build the site
+              working-directory: site
+              run: |
+                  npm ci
+                  node build.mjs
+            - uses: actions/upload-pages-artifact@v3
+              with:
+                  path: site/dist
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-24.04
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - id: deployment
+              uses: actions/deploy-pages@v4

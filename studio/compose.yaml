@@ -1,0 +1,21 @@
+# Run:  docker compose -f studio/compose.yaml up -d
+# Then open http://<this machine's address>:8080/ from any device on your network.
+services:
+  studio:
+    image: ghcr.io/ding-ding-projects/quicktype-studio:latest
+    build:
+      context: ..
+      dockerfile: studio/Dockerfile
+    container_name: quicktype-studio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      STUDIO_EDITION: web
+    read_only: true
+    tmpfs:
+      - /app/work:uid=1000,gid=1000
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

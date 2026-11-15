@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Command palette with regex builder</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4B2FE0}a:hover{color:#3420B0}
+button,input{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; position: relative; overflow: hidden; background: #CFC8BC; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif; color: #1C1B1F">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: repeating-linear-gradient(90deg, #D8D1C5 0 232px, #CFC8BC 232px 1440px)"></div>
+<div aria-hidden="true" style="position: absolute; left: 256px; top: 80px; width: 1160px; height: 760px; border-radius: 28px; background: #C6BFB2"></div>
+
+<div role="dialog" aria-modal="true" aria-label="Command palette" style="position: absolute; left: 260px; top: 72px; width: 920px; border-radius: 28px; background: #FFFFFF; box-shadow: 0 24px 60px rgba(28,27,31,.28), 0 2px 6px rgba(28,27,31,.12); overflow: hidden">
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 16px 12px 20px">
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#4B2FE0" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<label style="flex: 1; display: flex; flex-direction: column">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search everything</span>
+<input value="^(dark|high contrast).*theme$" style="height: 44px; border: 0; outline: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 17px; color: #1C1B1F; background: transparent">
+</label>
+<div role="radiogroup" aria-label="Search mode" style="display: flex; padding: 3px; gap: 3px; border-radius: 20px; background: #EFE9DF">
+<button role="radio" aria-checked="false" style="height: 34px; padding: 0 14px; border-radius: 17px; border: 0; background: transparent; color: #3D3842">Plain text</button>
+<button role="radio" aria-checked="true" style="height: 34px; padding: 0 14px; border-radius: 17px; border: 0; background: #4B2FE0; color: #FFFFFF; font-weight: 700">Regex</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 340px; border-top: 1px solid #EFE9DF">
+
+<ul aria-label="Results" style="list-style: none; margin: 0; padding: 8px; display: flex; flex-direction: column; gap: 2px">
+<li style="padding: 6px 12px 4px; font-size: 12px; font-weight: 700; color: #5A5560; text-transform: uppercase; letter-spacing: .08em">Settings, live</li>
+<li style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 6px 12px; border-radius: 18px; background: #E4DEFF">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 700"><mark style="background: #FFD9C2; color: inherit">Dark theme</mark></span><span style="font-size: 13px; color: #4A4458">Settings, Appearance, Theme</span></span>
+<button role="switch" aria-checked="true" aria-label="Dark theme" style="width: 52px; height: 32px; border-radius: 16px; border: 0; background: #4B2FE0; position: relative; padding: 0"><span style="position: absolute; left: 24px; top: 4px; width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF"></span></button>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #4A4458">Enter to go there</span>
+</li>
+<li style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 6px 12px; border-radius: 18px">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 700"><mark style="background: #FFD9C2; color: inherit">High contrast theme</mark></span><span style="font-size: 13px; color: #5A5560">Settings, Accessibility</span></span>
+<button role="switch" aria-checked="false" aria-label="High contrast theme" style="width: 52px; height: 32px; border-radius: 16px; border: 2px solid #79747E; background: #E7E0EC; position: relative; padding: 0"><span style="position: absolute; left: 6px; top: 6px; width: 16px; height: 16px; border-radius: 8px; background: #79747E"></span></button>
+</li>
+<li style="padding: 10px 12px 4px; font-size: 12px; font-weight: 700; color: #5A5560; text-transform: uppercase; letter-spacing: .08em">Elements</li>
+<li style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 6px 12px; border-radius: 18px">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 700">Dark code pane theme</span><span style="font-size: 13px; color: #5A5560">Generate tab, Generated code, Appearance editor</span></span>
+<span style="font-size: 13px; color: #5A5560">Jumps to the element</span>
+</li>
+<li style="padding: 10px 12px 4px; font-size: 12px; font-weight: 700; color: #5A5560; text-transform: uppercase; letter-spacing: .08em">Commands</li>
+<li style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 6px 12px; border-radius: 18px">
+<span style="flex: 1; font-weight: 700">Reset theme to defaults</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: 6px; background: #EFE9DF">Ctrl+Alt+0</span>
+</li>
+</ul>
+
+<section aria-label="Regex builder" style="padding: 16px; background: #F7F3EC; border-left: 1px solid #EFE9DF; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 18px; font-weight: 700">Regex builder</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="padding: 6px 10px; border-radius: 10px; background: #4B2FE0; color: #FFFFFF; font-family: 'JetBrains Mono', monospace; font-size: 13px">^ start</span>
+<span style="padding: 6px 10px; border-radius: 10px; background: #FFE1CF; color: #5A2306; font-family: 'JetBrains Mono', monospace; font-size: 13px">( dark | high contrast )</span>
+<span style="padding: 6px 10px; border-radius: 10px; background: #D7F0EA; color: #0B4F49; font-family: 'JetBrains Mono', monospace; font-size: 13px">.* anything</span>
+<span style="padding: 6px 10px; border-radius: 10px; background: #FFFFFF; border: 1px solid #D4CBBB; font-family: 'JetBrains Mono', monospace; font-size: 13px">theme</span>
+<span style="padding: 6px 10px; border-radius: 10px; background: #4B2FE0; color: #FFFFFF; font-family: 'JetBrains Mono', monospace; font-size: 13px">$ end</span>
+</div>
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<legend style="font-size: 13px; font-weight: 700; color: #3D3842; margin-bottom: 6px">Flags</legend>
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 18px; background: #E4DEFF"><input type="checkbox" checked> Ignore case</label>
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 18px; background: #FFFFFF; border: 1px solid #D4CBBB"><input type="checkbox"> Multiline</label>
+<label style="display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 18px; background: #FFFFFF; border: 1px solid #D4CBBB"><input type="checkbox"> Unicode</label>
+</fieldset>
+<div style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 14px; background: #EEF6EE; color: #2F6B3A; font-size: 14px">
+<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#2F6B3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4 10-10"></path></svg>
+Valid pattern, 2 matches
+</div>
+<button style="height: 44px; border-radius: 22px; border: 1px solid #B8AE9C; background: #FFFFFF; color: #1C1B1F">Add a building block</button>
+</section>
+</div>
+<div style="display: flex; gap: 20px; padding: 10px 20px; font-size: 13px; color: #5A5560; border-top: 1px solid #EFE9DF; background: #FBF9F5">
+<span>Up and Down to move</span><span>Enter to open</span><span>Space to toggle</span><span>Esc to close</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+    "description": "Pinned tools the build scripts fetch when they are missing. Digests are checked against the official SHASUMS256.txt for the same release.",
+    "node": {
+        "version": "24.6.0",
+        "source": "https://nodejs.org/dist/v24.6.0/",
+        "windowsArchive": "node-v24.6.0-win-x64.zip",
+        "linuxArchive": "node-v24.6.0-linux-x64.tar.xz"
+    }
+}

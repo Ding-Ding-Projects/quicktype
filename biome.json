@@ -10,7 +10,11 @@
             "!**/node_modules",
             "!**/packages/**/*/dist",
             "!**/packages/**/*/out",
-            "!**/packages/**/*/node_modules"
+            "!**/packages/**/*/node_modules",
+            "!**/studio/release",
+            "!**/site/dist",
+            "!**/studio/desktop/engine.bundle.cjs",
+            "!**/studio/desktop/engine.bundle.cjs.LEGAL.txt"
         ]
     },
     "formatter": {
@@ -92,7 +96,13 @@
             }
         }
     },
-    "assist": { "actions": { "source": { "organizeImports": "off" } } },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "off"
+            }
+        }
+    },
     "overrides": [
         {
             "includes": [
@@ -132,6 +142,30 @@
                 "parser": {
                     "allowComments": true,
                     "allowTrailingCommas": true
+                }
+            }
+        },
+        {
+            "includes": ["studio/**", "site/**"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useGlobalThis": "off",
+                        "useConsistentMethodSignatures": "off",
+                        "useTemplate": "off",
+                        "useExplicitLengthCheck": "off",
+                        "noMultiAssign": "off",
+                        "useReadonlyClassProperties": "off",
+                        "noDescendingSpecificity": "off"
+                    },
+                    "suspicious": {
+                        "noAssignInExpressions": "off",
+                        "noControlCharactersInRegex": "off",
+                        "noReturnAssign": "off"
+                    },
+                    "complexity": {
+                        "noImportantStyles": "off"
+                    }
                 }
             }
         }

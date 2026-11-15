@@ -1,0 +1,15 @@
+{
+    "name": "quicktype-studio-site",
+    "private": true,
+    "type": "module",
+    "description": "Website for quicktype Studio: landing page, documentation and downloads. It is not the app.",
+    "scripts": {
+        "build": "node build.mjs"
+    },
+    "dependencies": {
+        "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+        "@fontsource-variable/jetbrains-mono": "^5.3.0",
+        "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+        "marked": "^16.4.2"
+    }
+}

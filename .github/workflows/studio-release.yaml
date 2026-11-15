@@ -1,0 +1,175 @@
+# Builds and publishes quicktype Studio on every push to master:
+# the Windows desktop app (portable and installer), the self-hosted container
+# image and the appliance images, then one uniquely tagged GitHub release.
+name: Studio release
+
+on:
+    push:
+        branches: [master]
+    workflow_dispatch:
+
+concurrency:
+    group: studio-release
+    cancel-in-progress: false
+
+permissions:
+    contents: write
+    packages: write
+
+env:
+    STUDIO_VERSION: 24.0.0
+    IMAGE: ghcr.io/ding-ding-projects/quicktype-studio
+
+jobs:
+    meta:
+        runs-on: ubuntu-24.04
+        outputs:
+            tag: ${{ steps.m.outputs.tag }}
+            started: ${{ steps.m.outputs.started }}
+        steps:
+            - id: m
+              run: |
+                  echo "tag=studio-v${STUDIO_VERSION}-build.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+                  echo "started=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+    container:
+        needs: meta
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/setup-buildx-action@v3
+            - uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: studio/Dockerfile
+                  push: true
+                  build-args: |
+                      STUDIO_VERSION=${{ env.STUDIO_VERSION }}
+                      STUDIO_COMMIT=${{ github.sha }}
+                  tags: |
+                      ${{ env.IMAGE }}:latest
+                      ${{ env.IMAGE }}:${{ needs.meta.outputs.tag }}
+            - name: Smoke test the image
+              run: |
+                  docker run -d --name studio -p 8080:8080 "${IMAGE}:${{ needs.meta.outputs.tag }}"
+                  for i in $(seq 1 30); do curl -fsS localhost:8080/healthz && break; sleep 1; done
+                  curl -fsS localhost:8080/healthz
+
+    appliance:
+        needs: [meta, container]
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-go@v5
+              with:
+                  go-version: "1.23"
+            - name: Build appliance images
+              run: studio/appliance/build.sh "${IMAGE}:${{ needs.meta.outputs.tag }}" appliance-out
+            - uses: actions/upload-artifact@v4
+              if: ${{ always() }}
+              continue-on-error: true
+              with:
+                  name: appliance
+                  path: appliance-out/
+                  if-no-files-found: warn
+
+    windows:
+        needs: meta
+        runs-on: windows-2022
+        env:
+            CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+            - name: Build the quicktype engine
+              run: |
+                  npm ci
+                  npm run build --workspace quicktype-core --workspace quicktype-graphql-input --workspace quicktype-typescript-input
+            - name: Package quicktype Studio
+              working-directory: studio
+              env:
+                  VITE_STUDIO_VERSION: ${{ env.STUDIO_VERSION }}
+                  VITE_STUDIO_COMMIT: ${{ github.sha }}
+              run: |
+                  npm ci
+                  npm run package:win
+            - name: Record digests
+              shell: pwsh
+              working-directory: studio/release
+              run: |
+                  Get-ChildItem -File -Recurse -Include *.exe,*.nupkg,RELEASES | ForEach-Object {
+                    "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+                  } | Set-Content -Encoding ascii SHA256SUMS-windows.txt
+                  Get-Content SHA256SUMS-windows.txt
+            - uses: actions/upload-artifact@v4
+              if: ${{ always() }}
+              continue-on-error: true
+              with:
+                  name: windows
+                  path: |
+                      studio/release/*.exe
+                      studio/release/squirrel-windows/*
+                      studio/release/SHA256SUMS-windows.txt
+                  if-no-files-found: warn
+
+    publish:
+        needs: [meta, container, appliance, windows]
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/download-artifact@v4
+              with:
+                  path: out
+            - name: Write release notes
+              run: |
+                  completed="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                  started="${{ needs.meta.outputs.started }}"
+                  secs=$(( $(date -d "$completed" +%s) - $(date -d "$started" +%s) ))
+                  {
+                    echo "quicktype Studio ${STUDIO_VERSION}, build ${GITHUB_RUN_NUMBER} from ${GITHUB_SHA::12}."
+                    echo
+                    echo "No dim sum code name this build: the public catalogue is not consulted by this workflow, so the version alone names it."
+                    echo
+                    echo "## Downloads"
+                    echo "- Windows installer: quicktype-studio-*-setup.exe (Squirrel.Windows, updates itself)."
+                    echo "- Windows portable: quicktype-studio-*-portable.exe (one file, no install)."
+                    echo "- Self-hosted container: \`docker pull ${IMAGE}:${{ needs.meta.outputs.tag }}\`"
+                    echo "- Appliance images: quicktype-appliance-bios.img and quicktype-appliance-efi.iso."
+                    echo
+                    echo "These files are not code-signed. Windows SmartScreen may warn about an unknown publisher."
+                    echo
+                    echo "## Checks"
+                    echo "This workflow builds and publishes without a test gate. The container image passed a health-check smoke test in this run."
+                    echo
+                    echo "## Line count"
+                    node studio/scripts/count-lines.mjs
+                    echo
+                    echo "## Workflow timing"
+                    echo "- Workflow started: ${started}"
+                    echo "- Workflow completed: ${completed}"
+                    printf -- "- Workflow duration: %02d:%02d:%02d\n" $((secs/3600)) $((secs%3600/60)) $((secs%60))
+                  } > notes.md
+                  cat notes.md
+            - name: Publish the release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  mapfile -t assets < <(find out -type f \( -name '*.exe' -o -name '*.nupkg' -o -name 'RELEASES' -o -name '*.img' -o -name '*.iso' -o -name 'SHA256SUMS*' -o -name '*.yml' \) | sort)
+                  printf '%s\n' "${assets[@]}"
+                  gh release create "${{ needs.meta.outputs.tag }}" "${assets[@]}" \
+                    --target "$GITHUB_SHA" --title "quicktype Studio ${STUDIO_VERSION} (build ${GITHUB_RUN_NUMBER})" \
+                    --notes-file notes.md --latest=false
+            - name: Refresh the update channel
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh release view studio-channel >/dev/null 2>&1 || gh release create studio-channel --title "quicktype Studio update channel" --notes "Update feed used by installed copies of quicktype Studio. Download releases from the studio-v tags instead." --latest=false --prerelease
+                  mapfile -t feed < <(find out/windows -type f \( -name 'RELEASES' -o -name '*.nupkg' -o -name '*-setup.exe' \))
+                  gh release upload studio-channel "${feed[@]}" --clobber

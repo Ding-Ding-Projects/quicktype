@@ -3,6 +3,8 @@
 [![npm version](https://badge.fury.io/js/quicktype.svg)](https://badge.fury.io/js/quicktype)
 [![Build status](https://github.com/glideapps/quicktype/actions/workflows/test-pr.yaml/badge.svg?branch=master)](https://github.com/glideapps/quicktype/actions/workflows/test-pr.yaml)
 
+> **quicktype Studio** is this fork's redesigned app on top of the engine: a Windows desktop app, a self-hosted container and a bootable appliance image. Website and docs: https://ding-ding-projects.github.io/quicktype/ · Source and build steps: [`studio/README.md`](studio/README.md)
+
 `quicktype` generates strongly-typed models and serializers from JSON, JSON Schema, TypeScript, and [GraphQL queries](https://blog.quicktype.io/graphql-with-quicktype/), making it a breeze to work with JSON type-safely in many programming languages.
 
 -   [Try `quicktype` in your browser](https://app.quicktype.io).

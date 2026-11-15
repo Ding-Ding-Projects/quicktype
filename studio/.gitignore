@@ -1,0 +1,6 @@
+desktop/engine.bundle.cjs*
+node_modules
+dist
+release
+captures
+.studio-ts-*

@@ -1,0 +1,173 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-15T17:05:00Z"
+  },
+  "title": "quicktype Studio redesign",
+  "launch": {
+    "view": "canvas",
+    "page": "front"
+  },
+  "pages": [
+    {
+      "id": "front",
+      "name": "App front door"
+    },
+    {
+      "id": "onboard",
+      "name": "App first-run setup"
+    },
+    {
+      "id": "settings",
+      "name": "Settings and wording features"
+    },
+    {
+      "id": "hth",
+      "name": "Self-hosted web edition"
+    },
+    {
+      "id": "shth",
+      "name": "Appliance edition"
+    },
+    {
+      "id": "dth",
+      "name": "Website (not the app)"
+    }
+  ],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Desktop app workspace, Generate tab",
+      "page": "front",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Palette.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Ctrl+Shift+F command palette with anchored regex builder",
+      "page": "front"
+    },
+    "Onboarding.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "First-run setup, step 2 of 5",
+      "page": "onboard",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Settings.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Settings: language, playfulness, personal wording drop",
+      "page": "settings",
+      "expand": "fill"
+    },
+    "WebApp.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 820,
+      "title": "Self-hosted web edition on the local network",
+      "page": "hth",
+      "expand": "fill"
+    },
+    "WebPhone.dc.html": {
+      "x": 1360,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Self-hosted web edition on a phone",
+      "page": "hth"
+    },
+    "Appliance.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 800,
+      "title": "Appliance first boot and status",
+      "page": "shth",
+      "expand": "fill"
+    },
+    "Landing.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2600,
+      "title": "Website for the app (not the app itself)",
+      "page": "dth",
+      "expand": "fill"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Palette.dc.html",
+    "Onboarding.dc.html",
+    "Settings.dc.html",
+    "WebApp.dc.html",
+    "WebPhone.dc.html",
+    "Appliance.dc.html",
+    "Landing.dc.html"
+  ],
+  "notes": {
+    "tfront": {
+      "x": 0,
+      "y": -260,
+      "text": "App front door",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "front"
+    },
+    "tonboard": {
+      "x": 0,
+      "y": -260,
+      "text": "First-run setup",
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "onboard"
+    },
+    "tsettings": {
+      "x": 0,
+      "y": -260,
+      "text": "Settings and wording",
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "settings"
+    },
+    "thth": {
+      "x": 0,
+      "y": -260,
+      "text": "Self-hosted web edition",
+      "kind": "title1",
+      "maxW": 1750,
+      "page": "hth"
+    },
+    "tshth": {
+      "x": 0,
+      "y": -260,
+      "text": "Appliance edition",
+      "kind": "title1",
+      "maxW": 1280,
+      "page": "shth"
+    },
+    "tdth": {
+      "x": 0,
+      "y": -260,
+      "text": "Website",
+      "kind": "title1",
+      "maxW": 1440,
+      "page": "dth"
+    }
+  },
+  "designSystems": []
+}
