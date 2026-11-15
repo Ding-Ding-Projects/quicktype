@@ -1,12 +1,13 @@
 // Bundles the engine for the desktop main process into one CommonJS file so
 // the packaged app does not depend on the monorepo's workspace links.
+import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 
 await build({
     entryPoints: [
-        new URL("../shared/engine-node.mjs", import.meta.url).pathname,
+        fileURLToPath(new URL("../shared/engine-node.mjs", import.meta.url)),
     ],
-    outfile: new URL("../desktop/engine.bundle.cjs", import.meta.url).pathname,
+    outfile: fileURLToPath(new URL("../desktop/engine.bundle.cjs", import.meta.url)),
     bundle: true,
     platform: "node",
     format: "cjs",

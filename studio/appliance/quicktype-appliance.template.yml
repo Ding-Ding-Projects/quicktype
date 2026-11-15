@@ -35,7 +35,6 @@ services:
 files:
   - path: etc/issue
     contents: |
-
       quicktype Studio appliance
       Open http://<this machine's address>:8080/ from a device on the same network.
       Status page: http://<this machine's address>:8080/appliance
