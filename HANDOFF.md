@@ -19,13 +19,21 @@
 - Website built: 28 articles, no page errors, no sideways scrolling at 390 px.
 - `biome check .` reports no errors.
 
+## Verified on GitHub
+
+- `Studio release` run for `237ea79` succeeded and published `studio-v24.0.0-build.5.1` with the Squirrel installer, `RELEASES`, the full `.nupkg`, the portable `.exe`, both appliance images, the filled appliance recipe and SHA-256 lists. The notes carry the line count and workflow timing (00:05:00).
+- The `studio-channel` update feed holds the installer files.
+- `ghcr.io/ding-ding-projects/quicktype-studio:latest` is publicly pullable.
+- `Studio site` deployed to GitHub Pages after the release and found the portable asset, so the download button is live.
+
 ## Not verified yet
 
-- The release workflow has not run yet: Windows packaging, container push, appliance image build and publishing are unobserved.
-- GitHub Pages must be set to deploy from GitHub Actions for `studio-site.yaml` to publish.
+- The installer and portable app have not been run on a Windows machine.
+- The appliance images have not been booted.
+- Updating an installed copy from one release to the next has not been observed.
 - The Windows `.bat` scripts were written but not run on Windows in this pass.
 - See `ROADMAP.md` for features not built yet.
 
 ## Next owner
 
-Watch the first `Studio release` run, fix anything Windows-specific it finds, then confirm the website shows the download button once a release exists.
+Install the setup `.exe` on Windows, boot the appliance ISO in a virtual machine, then publish a second release and confirm the installed copy offers to restart and update.

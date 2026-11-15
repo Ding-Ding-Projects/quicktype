@@ -7,12 +7,12 @@ Ticks are claims: an item is ticked only when it is built and was checked in the
 - [x] Ground-up redesign drawn on a design canvas and checked into `design/`
 - [x] Shared interface: Generate, Samples, Languages, History, Tools, Extensions, Docs, Settings, Changelog, About
 - [x] Desktop app (Electron): frameless window, narrow preload bridge, TypeScript input, extension host, packaged and smoke-tested on Linux
-- [ ] Windows installer and portable files built by the release workflow (workflow written; first run not yet observed)
+- [x] Windows installer (Squirrel) and portable files built and published by the release workflow
 - [x] Self-hosted container: image built locally, read-only, unprivileged, health check passes, TypeScript input works
 - [x] `host.bat` start, stop, restart, status, logs and update modes with verified network addresses
-- [ ] Appliance image built by the release workflow (recipe filled from pinned LinuxKit components locally; full image build not yet run)
+- [x] Appliance BIOS image and EFI ISO built and published by the release workflow (not yet booted on hardware or in a virtual machine)
 - [x] Website separate from the app, one article per feature, phone layout without sideways scrolling
-- [ ] Website deployed to GitHub Pages (workflow written; needs Pages set to deploy from Actions)
+- [x] Website deployed to GitHub Pages, with the download button shown only after a release asset resolves
 
 ## Phase 2: interface behaviour
 
@@ -43,7 +43,7 @@ Ticks are claims: an item is ticked only when it is built and was checked in the
 - [x] Release workflow: unique tag per run, unsigned disclosure, line count, workflow timing, no test gate
 - [x] Studio tags skip the npm and Marketplace workflows
 - [x] Root `build.bat`, `build-installer.bat`, `download-dependencies.bat` and `.sh`
-- [ ] First release observed end to end with assets downloadable
+- [x] First release observed end to end: `studio-v24.0.0-build.5.1`, assets attached, container image publicly pullable
 - [ ] Installed-copy update verified from one release to the next
 
 ## Not built yet
